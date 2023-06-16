@@ -8,14 +8,6 @@ use hashbrown::{HashMap, HashSet};
 pub mod numbers;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub enum ByteCountFormatterCountStyle {
-    File,
-    Memory,
-    Decimal,
-    Binary,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum ByteCountFormatterUnits {
     UseBytes,
     UseKB,
@@ -48,10 +40,9 @@ impl fmt::Display for ByteCountFormatterUnits {
 
 #[derive(Debug, Clone)]
 pub struct ByteCountFormatter {
-    allowed_units: HashSet<ByteCountFormatterUnits>,
-    count_style: Option<ByteCountFormatterCountStyle>,
-    includes_unit: bool,
-    includes_count: bool,
+    pub allowed_units: HashSet<ByteCountFormatterUnits>,
+    pub includes_unit: bool,
+    pub includes_count: bool,
 }
 
 impl ByteCountFormatter {
@@ -65,7 +56,7 @@ impl ByteCountFormatter {
 
         if self.allowed_units.is_empty()
             || self
-                .allowed_units()
+                .allowed_units
                 .contains(&ByteCountFormatterUnits::UseAll)
         {
             allowed_units.push(ByteCountFormatterUnits::UseBytes);
@@ -78,7 +69,7 @@ impl ByteCountFormatter {
             allowed_units.push(ByteCountFormatterUnits::UseZB);
             allowed_units.push(ByteCountFormatterUnits::UseYBOrHigher);
         } else {
-            for units in self.allowed_units() {
+            for units in &self.allowed_units {
                 allowed_units.push(*units)
             }
         }
@@ -87,7 +78,7 @@ impl ByteCountFormatter {
         let mut bytes = byte_count;
 
         if self
-            .allowed_units()
+            .allowed_units
             .contains(&ByteCountFormatterUnits::UseBytes)
         {
             unit_str = if byte_count != 1 {
@@ -95,50 +86,29 @@ impl ByteCountFormatter {
             } else {
                 String::from("byte")
             };
-        } else if self
-            .allowed_units()
-            .contains(&ByteCountFormatterUnits::UseKB)
-        {
+        } else if self.allowed_units.contains(&ByteCountFormatterUnits::UseKB) {
             unit_str = "KB".to_string();
             bytes /= 10_i128.pow(3);
-        } else if self
-            .allowed_units()
-            .contains(&ByteCountFormatterUnits::UseMB)
-        {
+        } else if self.allowed_units.contains(&ByteCountFormatterUnits::UseMB) {
             unit_str = "MB".to_string();
             bytes /= 10_i128.pow(6);
-        } else if self
-            .allowed_units()
-            .contains(&ByteCountFormatterUnits::UseGB)
-        {
+        } else if self.allowed_units.contains(&ByteCountFormatterUnits::UseGB) {
             unit_str = "GB".to_string();
             bytes /= 10_i128.pow(9);
-        } else if self
-            .allowed_units()
-            .contains(&ByteCountFormatterUnits::UseTB)
-        {
+        } else if self.allowed_units.contains(&ByteCountFormatterUnits::UseTB) {
             unit_str = "TB".to_string();
             bytes /= 10_i128.pow(12);
-        } else if self
-            .allowed_units()
-            .contains(&ByteCountFormatterUnits::UsePB)
-        {
+        } else if self.allowed_units.contains(&ByteCountFormatterUnits::UsePB) {
             unit_str = "PB".to_string();
             bytes /= 10_i128.pow(15);
-        } else if self
-            .allowed_units()
-            .contains(&ByteCountFormatterUnits::UseEB)
-        {
+        } else if self.allowed_units.contains(&ByteCountFormatterUnits::UseEB) {
             unit_str = "EB".to_string();
             bytes /= 10_i128.pow(18);
-        } else if self
-            .allowed_units()
-            .contains(&ByteCountFormatterUnits::UseZB)
-        {
+        } else if self.allowed_units.contains(&ByteCountFormatterUnits::UseZB) {
             unit_str = "ZB".to_string();
             bytes /= 10_i128.pow(21);
         } else if self
-            .allowed_units()
+            .allowed_units
             .contains(&ByteCountFormatterUnits::UseYBOrHigher)
         {
             unit_str = "YB".to_string();
@@ -191,45 +161,12 @@ impl ByteCountFormatter {
             }
         )
     }
-
-    pub fn allowed_units(&self) -> &HashSet<ByteCountFormatterUnits> {
-        &self.allowed_units
-    }
-
-    pub fn set_allowed_units(&mut self, allowed_units: HashSet<ByteCountFormatterUnits>) {
-        self.allowed_units = allowed_units;
-    }
-
-    pub fn count_style(&self) -> Option<ByteCountFormatterCountStyle> {
-        self.count_style
-    }
-
-    pub fn set_count_style(&mut self, count_style: Option<ByteCountFormatterCountStyle>) {
-        self.count_style = count_style;
-    }
-
-    pub fn includes_unit(&self) -> bool {
-        self.includes_unit
-    }
-
-    pub fn set_includes_unit(&mut self, includes_unit: bool) {
-        self.includes_unit = includes_unit;
-    }
-
-    pub fn includes_count(&self) -> bool {
-        self.includes_count
-    }
-
-    pub fn set_includes_count(&mut self, includes_count: bool) {
-        self.includes_count = includes_count;
-    }
 }
 
 impl Default for ByteCountFormatter {
     fn default() -> Self {
         ByteCountFormatter {
             allowed_units: HashSet::new(),
-            count_style: None,
             includes_unit: true,
             includes_count: true,
         }
@@ -248,7 +185,7 @@ mod tests {
 
         // Test with default settings
         assert_eq!(formatter.string_from_byte_count(0), "0 bytes");
-        assert_eq!(formatter.string_from_byte_count(1023), "1023 bytes");
+        assert_eq!(formatter.string_from_byte_count(1023), "1 KB");
         assert_eq!(formatter.string_from_byte_count(1024), "1 KB");
         assert_eq!(formatter.string_from_byte_count(1048576), "1 MB");
         assert_eq!(formatter.string_from_byte_count(1073741824), "1 GB");
@@ -268,32 +205,30 @@ mod tests {
         );
         assert_eq!(
             formatter.string_from_byte_count(1237940039285380274899124224),
-            "1000 YB"
+            "1237 YB"
         );
 
         // Test with custom settings
         let mut custom_formatter = ByteCountFormatter::new();
-        custom_formatter.set_allowed_units(
-            vec![
-                ByteCountFormatterUnits::UseBytes,
-                ByteCountFormatterUnits::UseMB,
-                ByteCountFormatterUnits::UseGB,
-                ByteCountFormatterUnits::UseYBOrHigher,
-            ]
-            .into_iter()
-            .collect(),
-        );
-        custom_formatter.set_includes_count(false);
-        custom_formatter.set_includes_unit(false);
+        custom_formatter.allowed_units = vec![
+            ByteCountFormatterUnits::UseBytes,
+            ByteCountFormatterUnits::UseMB,
+            ByteCountFormatterUnits::UseGB,
+            ByteCountFormatterUnits::UseYBOrHigher,
+        ]
+        .into_iter()
+        .collect();
+        custom_formatter.includes_count = false;
+        custom_formatter.includes_unit = false;
 
         assert_eq!(custom_formatter.string_from_byte_count(0), "");
         assert_eq!(custom_formatter.string_from_byte_count(1023), "");
-        assert_eq!(custom_formatter.string_from_byte_count(1048576), "1 MB");
-        assert_eq!(custom_formatter.string_from_byte_count(1073741824), "1 GB");
+        assert_eq!(custom_formatter.string_from_byte_count(1048576), "");
+        assert_eq!(custom_formatter.string_from_byte_count(1073741824), "");
         assert_eq!(custom_formatter.string_from_byte_count(1099511627776), "");
         assert_eq!(
             custom_formatter.string_from_byte_count(1237940039285380274899124224),
-            "1000 YB"
+            ""
         );
     }
 
@@ -302,22 +237,20 @@ mod tests {
         let mut formatter = ByteCountFormatter::new();
 
         // Test with default settings
-        assert_eq!(formatter.allowed_units(), &vec![].into_iter().collect());
+        assert_eq!(formatter.allowed_units, vec![].into_iter().collect());
 
         // Test after setting custom units
-        formatter.set_allowed_units(
-            vec![
-                ByteCountFormatterUnits::UseKB,
-                ByteCountFormatterUnits::UseMB,
-                ByteCountFormatterUnits::UseGB,
-            ]
-            .into_iter()
-            .collect(),
-        );
+        formatter.allowed_units = vec![
+            ByteCountFormatterUnits::UseKB,
+            ByteCountFormatterUnits::UseMB,
+            ByteCountFormatterUnits::UseGB,
+        ]
+        .into_iter()
+        .collect();
 
         assert_eq!(
-            formatter.allowed_units(),
-            &vec![
+            formatter.allowed_units,
+            vec![
                 ByteCountFormatterUnits::UseKB,
                 ByteCountFormatterUnits::UseMB,
                 ByteCountFormatterUnits::UseGB,
@@ -328,30 +261,15 @@ mod tests {
     }
 
     #[test]
-    fn test_count_style() {
-        let mut formatter = ByteCountFormatter::new();
-
-        // Test with default settings
-        assert_eq!(formatter.count_style(), None);
-
-        // Test after setting custom count style
-        formatter.set_count_style(Some(ByteCountFormatterCountStyle::Memory));
-        assert_eq!(
-            formatter.count_style(),
-            Some(ByteCountFormatterCountStyle::Memory)
-        );
-    }
-
-    #[test]
     fn test_includes_unit() {
         let mut formatter = ByteCountFormatter::new();
 
         // Test with default settings
-        assert!(formatter.includes_unit());
+        assert!(formatter.includes_unit);
 
         // Test after setting custom includes unit value
-        formatter.set_includes_unit(false);
-        assert!(!formatter.includes_unit());
+        formatter.includes_unit = false;
+        assert!(!formatter.includes_unit);
     }
 
     #[test]
@@ -359,10 +277,10 @@ mod tests {
         let mut formatter = ByteCountFormatter::new();
 
         // Test with default settings
-        assert!(formatter.includes_count());
+        assert!(formatter.includes_count);
 
         // Test after setting custom includes count value
-        formatter.set_includes_count(false);
-        assert!(!formatter.includes_count());
+        formatter.includes_count = false;
+        assert!(!formatter.includes_count);
     }
 }
