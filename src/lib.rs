@@ -1,3 +1,4 @@
+#![feature(core_intrinsics)]
 #![no_std]
 
 extern crate alloc;

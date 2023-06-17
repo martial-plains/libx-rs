@@ -1,9 +1,11 @@
+use core::intrinsics::roundf64;
+
 use alloc::{
     fmt, format,
     string::{String, ToString},
     vec::Vec,
 };
-use hashbrown::{HashMap, HashSet};
+use hashbrown::HashMap;
 
 pub mod numbers;
 
@@ -40,9 +42,10 @@ impl fmt::Display for ByteCountFormatterUnits {
 
 #[derive(Debug, Clone)]
 pub struct ByteCountFormatter {
-    pub allowed_units: HashSet<ByteCountFormatterUnits>,
+    pub allowed_units: Vec<ByteCountFormatterUnits>,
     pub includes_unit: bool,
     pub includes_count: bool,
+    pub includes_actual_byte_count: bool,
 }
 
 impl ByteCountFormatter {
@@ -143,9 +146,27 @@ impl ByteCountFormatter {
         }
 
         format!(
-            "{count}{space}{unit}",
+            "{count}{space}{unit}{actual_count}",
             count = if self.includes_count {
-                bytes.to_string()
+                let whole_number_str = bytes.to_string();
+                let decimal_numbers_str = {
+                    let byte_count_str = byte_count.to_string();
+                    let mut decimal_part = byte_count_str[byte_count_str
+                        .find(&whole_number_str)
+                        .expect("Could find whole number within `byte_count`")
+                        + whole_number_str.len()..]
+                        .to_string();
+                    decimal_part.insert(1, '.');
+                    let float = unsafe { roundf64(decimal_part.parse::<f64>().unwrap()) };
+
+                    (float as i128).to_string()
+                };
+
+                if decimal_numbers_str.chars().all(|c| c == '0') {
+                    whole_number_str
+                } else {
+                    format!("{whole_number_str}.{decimal_numbers_str}")
+                }
             } else {
                 String::new()
             },
@@ -158,6 +179,11 @@ impl ByteCountFormatter {
                 unit_str
             } else {
                 String::new()
+            },
+            actual_count = if self.includes_actual_byte_count {
+                format!(" ({byte_count} bytes)")
+            } else {
+                String::new()
             }
         )
     }
@@ -166,9 +192,10 @@ impl ByteCountFormatter {
 impl Default for ByteCountFormatter {
     fn default() -> Self {
         ByteCountFormatter {
-            allowed_units: HashSet::new(),
+            allowed_units: Vec::new(),
             includes_unit: true,
             includes_count: true,
+            includes_actual_byte_count: false,
         }
     }
 }
@@ -237,7 +264,7 @@ mod tests {
         let mut formatter = ByteCountFormatter::new();
 
         // Test with default settings
-        assert_eq!(formatter.allowed_units, vec![].into_iter().collect());
+        assert_eq!(formatter.allowed_units, vec![]);
 
         // Test after setting custom units
         formatter.allowed_units = vec![
@@ -255,8 +282,6 @@ mod tests {
                 ByteCountFormatterUnits::UseMB,
                 ByteCountFormatterUnits::UseGB,
             ]
-            .into_iter()
-            .collect()
         );
     }
 
