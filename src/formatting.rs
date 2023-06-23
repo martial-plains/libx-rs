@@ -156,7 +156,12 @@ impl ByteCountFormatter {
                         .expect("Could find whole number within `byte_count`")
                         + whole_number_str.len()..]
                         .to_string();
-                    decimal_part.insert(1, '.');
+                    if decimal_part.is_empty() {
+                        decimal_part = String::from("0.0");
+                    } else {
+                        decimal_part.insert(1, '.');
+                    }
+
                     let float = unsafe { roundf64(decimal_part.parse::<f64>().unwrap()) };
 
                     (float as i128).to_string()
@@ -215,24 +220,24 @@ mod tests {
         assert_eq!(formatter.string_from_byte_count(1023), "1 KB");
         assert_eq!(formatter.string_from_byte_count(1024), "1 KB");
         assert_eq!(formatter.string_from_byte_count(1048576), "1 MB");
-        assert_eq!(formatter.string_from_byte_count(1073741824), "1 GB");
-        assert_eq!(formatter.string_from_byte_count(1099511627776), "1 TB");
-        assert_eq!(formatter.string_from_byte_count(1125899906842624), "1 PB");
+        assert_eq!(formatter.string_from_byte_count(1073741824), "1.1 GB");
+        assert_eq!(formatter.string_from_byte_count(1099511627776), "1.1 TB");
+        assert_eq!(formatter.string_from_byte_count(1125899906842624), "1.1 PB");
         assert_eq!(
             formatter.string_from_byte_count(1152921504606846976),
-            "1 EB"
+            "1.2 EB"
         );
         assert_eq!(
             formatter.string_from_byte_count(1180591620717411303424),
-            "1 ZB"
+            "1.2 ZB"
         );
         assert_eq!(
             formatter.string_from_byte_count(1208925819614629174706176),
-            "1 YB"
+            "1.2 YB"
         );
         assert_eq!(
             formatter.string_from_byte_count(1237940039285380274899124224),
-            "1237 YB"
+            "1237.9 YB"
         );
 
         // Test with custom settings
