@@ -49,11 +49,13 @@ pub struct ByteCountFormatter {
 }
 
 impl ByteCountFormatter {
+    #[must_use]
     pub fn new() -> Self {
         Self::default()
     }
 
     /// Converts a byte count into a string without using dynamic dispatch.
+    #[must_use]
     pub fn string_from_byte_count(&self, byte_count: i128) -> String {
         let mut allowed_units = Vec::new();
 
@@ -73,7 +75,7 @@ impl ByteCountFormatter {
             allowed_units.push(ByteCountFormatterUnits::UseYBOrHigher);
         } else {
             for units in &self.allowed_units {
-                allowed_units.push(*units)
+                allowed_units.push(*units);
             }
         }
 
@@ -84,10 +86,10 @@ impl ByteCountFormatter {
             .allowed_units
             .contains(&ByteCountFormatterUnits::UseBytes)
         {
-            unit_str = if byte_count != 1 {
-                String::from("bytes")
-            } else {
+            unit_str = if byte_count == 1 {
                 String::from("byte")
+            } else {
+                String::from("bytes")
             };
         } else if self.allowed_units.contains(&ByteCountFormatterUnits::UseKB) {
             unit_str = "KB".to_string();
@@ -162,7 +164,13 @@ impl ByteCountFormatter {
                         decimal_part.insert(1, '.');
                     }
 
-                    let float = unsafe { roundf64(decimal_part.parse::<f64>().unwrap()) };
+                    let float = unsafe {
+                        roundf64(
+                            decimal_part
+                                .parse::<f64>()
+                                .expect("Could not parse decimal part to float"),
+                        )
+                    };
 
                     (float as i128).to_string()
                 };
@@ -219,24 +227,30 @@ mod tests {
         assert_eq!(formatter.string_from_byte_count(0), "0 bytes");
         assert_eq!(formatter.string_from_byte_count(1023), "1 KB");
         assert_eq!(formatter.string_from_byte_count(1024), "1 KB");
-        assert_eq!(formatter.string_from_byte_count(1048576), "1 MB");
-        assert_eq!(formatter.string_from_byte_count(1073741824), "1.1 GB");
-        assert_eq!(formatter.string_from_byte_count(1099511627776), "1.1 TB");
-        assert_eq!(formatter.string_from_byte_count(1125899906842624), "1.1 PB");
+        assert_eq!(formatter.string_from_byte_count(1_048_576), "1 MB");
+        assert_eq!(formatter.string_from_byte_count(1_073_741_824), "1.1 GB");
         assert_eq!(
-            formatter.string_from_byte_count(1152921504606846976),
+            formatter.string_from_byte_count(1_099_511_627_776),
+            "1.1 TB"
+        );
+        assert_eq!(
+            formatter.string_from_byte_count(1_125_899_906_842_624),
+            "1.1 PB"
+        );
+        assert_eq!(
+            formatter.string_from_byte_count(1_152_921_504_606_846_976),
             "1.2 EB"
         );
         assert_eq!(
-            formatter.string_from_byte_count(1180591620717411303424),
+            formatter.string_from_byte_count(1_180_591_620_717_411_303_424),
             "1.2 ZB"
         );
         assert_eq!(
-            formatter.string_from_byte_count(1208925819614629174706176),
+            formatter.string_from_byte_count(1_208_925_819_614_629_174_706_176),
             "1.2 YB"
         );
         assert_eq!(
-            formatter.string_from_byte_count(1237940039285380274899124224),
+            formatter.string_from_byte_count(1_237_940_039_285_380_274_899_124_224),
             "1237.9 YB"
         );
 
@@ -255,11 +269,14 @@ mod tests {
 
         assert_eq!(custom_formatter.string_from_byte_count(0), "");
         assert_eq!(custom_formatter.string_from_byte_count(1023), "");
-        assert_eq!(custom_formatter.string_from_byte_count(1048576), "");
-        assert_eq!(custom_formatter.string_from_byte_count(1073741824), "");
-        assert_eq!(custom_formatter.string_from_byte_count(1099511627776), "");
+        assert_eq!(custom_formatter.string_from_byte_count(1_048_576), "");
+        assert_eq!(custom_formatter.string_from_byte_count(1_073_741_824), "");
         assert_eq!(
-            custom_formatter.string_from_byte_count(1237940039285380274899124224),
+            custom_formatter.string_from_byte_count(1_099_511_627_776),
+            ""
+        );
+        assert_eq!(
+            custom_formatter.string_from_byte_count(1_237_940_039_285_380_274_899_124_224),
             ""
         );
     }
