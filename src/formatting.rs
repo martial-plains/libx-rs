@@ -59,25 +59,7 @@ impl ByteCountFormatter {
     pub fn string_from_byte_count(&self, byte_count: i128) -> String {
         let mut allowed_units = Vec::new();
 
-        if self.allowed_units.is_empty()
-            || self
-                .allowed_units
-                .contains(&ByteCountFormatterUnits::UseAll)
-        {
-            allowed_units.push(ByteCountFormatterUnits::UseBytes);
-            allowed_units.push(ByteCountFormatterUnits::UseKB);
-            allowed_units.push(ByteCountFormatterUnits::UseMB);
-            allowed_units.push(ByteCountFormatterUnits::UseGB);
-            allowed_units.push(ByteCountFormatterUnits::UseTB);
-            allowed_units.push(ByteCountFormatterUnits::UsePB);
-            allowed_units.push(ByteCountFormatterUnits::UseEB);
-            allowed_units.push(ByteCountFormatterUnits::UseZB);
-            allowed_units.push(ByteCountFormatterUnits::UseYBOrHigher);
-        } else {
-            for units in &self.allowed_units {
-                allowed_units.push(*units);
-            }
-        }
+        self.get_allowed_units(&mut allowed_units);
 
         let mut unit_str = String::from("bytes");
         let mut bytes = byte_count;
@@ -149,40 +131,7 @@ impl ByteCountFormatter {
 
         format!(
             "{count}{space}{unit}{actual_count}",
-            count = if self.includes_count {
-                let whole_number_str = bytes.to_string();
-                let decimal_numbers_str = {
-                    let byte_count_str = byte_count.to_string();
-                    let mut decimal_part = byte_count_str[byte_count_str
-                        .find(&whole_number_str)
-                        .expect("Could find whole number within `byte_count`")
-                        + whole_number_str.len()..]
-                        .to_string();
-                    if decimal_part.is_empty() {
-                        decimal_part = String::from("0.0");
-                    } else {
-                        decimal_part.insert(1, '.');
-                    }
-
-                    let float = unsafe {
-                        roundf64(
-                            decimal_part
-                                .parse::<f64>()
-                                .expect("Could not parse decimal part to float"),
-                        )
-                    };
-
-                    (float as i128).to_string()
-                };
-
-                if decimal_numbers_str.chars().all(|c| c == '0') {
-                    whole_number_str
-                } else {
-                    format!("{whole_number_str}.{decimal_numbers_str}")
-                }
-            } else {
-                String::new()
-            },
+            count = self.format_count(bytes, byte_count),
             space = if self.includes_count && self.includes_unit {
                 " "
             } else {
@@ -199,6 +148,66 @@ impl ByteCountFormatter {
                 String::new()
             }
         )
+    }
+
+    #[allow(clippy::cast_possible_truncation)]
+    fn format_count(&self, bytes: i128, byte_count: i128) -> String {
+        if self.includes_count {
+            let whole_number_str = bytes.to_string();
+            let decimal_numbers_str = {
+                let byte_count_str = byte_count.to_string();
+                let mut decimal_part = byte_count_str[byte_count_str
+                    .find(&whole_number_str)
+                    .expect("Could find whole number within `byte_count`")
+                    + whole_number_str.len()..]
+                    .to_string();
+                if decimal_part.is_empty() {
+                    decimal_part = String::from("0.0");
+                } else {
+                    decimal_part.insert(1, '.');
+                }
+
+                let float = unsafe {
+                    roundf64(
+                        decimal_part
+                            .parse::<f64>()
+                            .expect("Could not parse decimal part to float"),
+                    )
+                };
+
+                (float as i128).to_string()
+            };
+
+            if decimal_numbers_str.chars().all(|c| c == '0') {
+                whole_number_str
+            } else {
+                format!("{whole_number_str}.{decimal_numbers_str}")
+            }
+        } else {
+            String::new()
+        }
+    }
+
+    fn get_allowed_units(&self, allowed_units: &mut Vec<ByteCountFormatterUnits>) {
+        if self.allowed_units.is_empty()
+            || self
+                .allowed_units
+                .contains(&ByteCountFormatterUnits::UseAll)
+        {
+            allowed_units.push(ByteCountFormatterUnits::UseBytes);
+            allowed_units.push(ByteCountFormatterUnits::UseKB);
+            allowed_units.push(ByteCountFormatterUnits::UseMB);
+            allowed_units.push(ByteCountFormatterUnits::UseGB);
+            allowed_units.push(ByteCountFormatterUnits::UseTB);
+            allowed_units.push(ByteCountFormatterUnits::UsePB);
+            allowed_units.push(ByteCountFormatterUnits::UseEB);
+            allowed_units.push(ByteCountFormatterUnits::UseZB);
+            allowed_units.push(ByteCountFormatterUnits::UseYBOrHigher);
+        } else {
+            for units in &self.allowed_units {
+                allowed_units.push(*units);
+            }
+        }
     }
 }
 
