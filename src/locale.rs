@@ -24,14 +24,17 @@ unsafe impl Send for Locale {}
 unsafe impl Sync for Locale {}
 
 impl Locale {
+    #[must_use]
     pub fn new(identifier: String) -> Self {
         Self { identifier }
     }
 
+    #[must_use]
     pub fn identifier(&self) -> &str {
         &self.identifier
     }
 
+    #[must_use]
     pub fn current() -> Locale {
         if let Some(lang) = get_env_var("LANG") {
             if let Some(locale) = lang.split('.').next() {
@@ -43,6 +46,7 @@ impl Locale {
         Locale::new("en_US".to_string())
     }
 
+    #[must_use]
     pub fn common_iso_currency_codes() -> Vec<String> {
         alloc::vec![
             "ADP", "AED", "AFA", "AFN", "ALK", "ALL", "AMD", "ANG", "AOA", "AOK", "AON", "AOR",
@@ -73,11 +77,12 @@ impl Locale {
             "ZRZ", "ZWD", "ZWL", "ZWR",
         ]
         .iter()
-        .map(|s| s.to_string())
+        .map(alloc::string::ToString::to_string)
         .collect()
     }
 
-    pub fn identifier_from_components(components: HashMap<String, String>) -> String {
+    #[must_use]
+    pub fn identifier_from_components(components: &HashMap<String, String>) -> String {
         let mut identifier = String::from("@");
 
         for (index, (key, value)) in components.iter().enumerate() {

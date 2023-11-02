@@ -18,6 +18,7 @@ pub enum Number {
 }
 
 impl Number {
+    #[must_use]
     pub fn bool(&self) -> bool {
         match self {
             Number::Bool(value) => *value,
@@ -34,9 +35,10 @@ impl Number {
         }
     }
 
+    #[must_use]
     pub fn int(&self) -> isize {
         match self {
-            Number::Bool(value) => *value as isize,
+            Number::Bool(value) => isize::from(*value),
             Number::Int(value) => *value,
             Number::Int8(value) => *value as isize,
             Number::Int16(value) => *value as isize,
@@ -50,6 +52,7 @@ impl Number {
         }
     }
 
+    #[must_use]
     pub fn int8(&self) -> i8 {
         match self {
             Number::Bool(value) => *value as i8,
@@ -66,6 +69,7 @@ impl Number {
         }
     }
 
+    #[must_use]
     pub fn int16(&self) -> i16 {
         match self {
             Number::Bool(value) => *value as i16,
@@ -82,6 +86,7 @@ impl Number {
         }
     }
 
+    #[must_use]
     pub fn int32(&self) -> i32 {
         match self {
             Number::Bool(value) => *value as i32,
@@ -98,6 +103,7 @@ impl Number {
         }
     }
 
+    #[must_use]
     pub fn uint(&self) -> usize {
         match self {
             Number::Bool(value) => *value as usize,
@@ -114,6 +120,7 @@ impl Number {
         }
     }
 
+    #[must_use]
     pub fn uint8(&self) -> u8 {
         match self {
             Number::Bool(value) => *value as u8,
@@ -130,6 +137,7 @@ impl Number {
         }
     }
 
+    #[must_use]
     pub fn uint16(&self) -> u16 {
         match self {
             Number::Bool(value) => *value as u16,
@@ -146,6 +154,7 @@ impl Number {
         }
     }
 
+    #[must_use]
     pub fn uint32(&self) -> u32 {
         match self {
             Number::Bool(value) => *value as u32,
@@ -162,6 +171,7 @@ impl Number {
         }
     }
 
+    #[must_use]
     pub fn float(&self) -> f32 {
         match self {
             Number::Bool(value) => *value as u8 as f32,
@@ -178,6 +188,7 @@ impl Number {
         }
     }
 
+    #[must_use]
     pub fn double(&self) -> f64 {
         match self {
             Number::Bool(value) => *value as u8 as f64,

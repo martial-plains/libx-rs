@@ -28,10 +28,13 @@ pub struct NumberFormatter {
 }
 
 impl NumberFormatter {
+    /// # Errors
+    /// Will return [`Err`] if it's not possible to parse this string slice into the desired type.
     pub fn number(&self, string: &str) -> Result<Number, String> {
         string.parse()
     }
 
+    #[must_use]
     pub fn string(&self, number: &Number) -> String {
         number.to_string()
     }
