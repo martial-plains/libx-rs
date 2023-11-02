@@ -138,7 +138,7 @@ unsafe impl<T> Sync for Stack<T> {}
 
 impl<T> core::fmt::Debug for Stack<T>
 where
-    T: Clone + Default + core::fmt::Debug,
+    T: Clone + core::fmt::Debug,
 {
     fn fmt(&self, f: &mut core::fmt::Formatter) -> Result<(), core::fmt::Error> {
         let mut first = true;

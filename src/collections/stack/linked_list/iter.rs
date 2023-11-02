@@ -1,6 +1,10 @@
 use super::Stack;
 
-pub struct Iter<'a, T> {
+#[derive(Debug)]
+pub struct Iter<'a, T>
+where
+    T: Clone,
+{
     pub(super) stack: &'a Stack<T>,
     pub(super) index: usize,
 }
