@@ -7,10 +7,8 @@ use alloc::{
 };
 use hashbrown::HashMap;
 
-pub mod numbers;
-
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub enum ByteCountFormatterUnits {
+pub enum CountFormatterUnits {
     UseBytes,
     UseKB,
     UseMB,
@@ -23,32 +21,32 @@ pub enum ByteCountFormatterUnits {
     UseAll,
 }
 
-impl fmt::Display for ByteCountFormatterUnits {
+impl fmt::Display for CountFormatterUnits {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            ByteCountFormatterUnits::UseBytes => write!(f, "bytes"),
-            ByteCountFormatterUnits::UseKB => write!(f, "KB"),
-            ByteCountFormatterUnits::UseMB => write!(f, "MB"),
-            ByteCountFormatterUnits::UseGB => write!(f, "GB"),
-            ByteCountFormatterUnits::UseTB => write!(f, "TB"),
-            ByteCountFormatterUnits::UsePB => write!(f, "PB"),
-            ByteCountFormatterUnits::UseEB => write!(f, "EB"),
-            ByteCountFormatterUnits::UseZB => write!(f, "ZB"),
-            ByteCountFormatterUnits::UseYBOrHigher => write!(f, "YB"),
-            ByteCountFormatterUnits::UseAll => write!(f, "All"),
+            CountFormatterUnits::UseBytes => write!(f, "bytes"),
+            CountFormatterUnits::UseKB => write!(f, "KB"),
+            CountFormatterUnits::UseMB => write!(f, "MB"),
+            CountFormatterUnits::UseGB => write!(f, "GB"),
+            CountFormatterUnits::UseTB => write!(f, "TB"),
+            CountFormatterUnits::UsePB => write!(f, "PB"),
+            CountFormatterUnits::UseEB => write!(f, "EB"),
+            CountFormatterUnits::UseZB => write!(f, "ZB"),
+            CountFormatterUnits::UseYBOrHigher => write!(f, "YB"),
+            CountFormatterUnits::UseAll => write!(f, "All"),
         }
     }
 }
 
 #[derive(Debug, Clone)]
-pub struct ByteCountFormatter {
-    pub allowed_units: Vec<ByteCountFormatterUnits>,
+pub struct CountFormatter {
+    pub allowed_units: Vec<CountFormatterUnits>,
     pub includes_unit: bool,
     pub includes_count: bool,
     pub includes_actual_byte_count: bool,
 }
 
-impl ByteCountFormatter {
+impl CountFormatter {
     #[must_use]
     pub fn new() -> Self {
         Self::default()
@@ -64,53 +62,50 @@ impl ByteCountFormatter {
         let mut unit_str = String::from("bytes");
         let mut bytes = byte_count;
 
-        if self
-            .allowed_units
-            .contains(&ByteCountFormatterUnits::UseBytes)
-        {
+        if self.allowed_units.contains(&CountFormatterUnits::UseBytes) {
             unit_str = if byte_count == 1 {
                 String::from("byte")
             } else {
                 String::from("bytes")
             };
-        } else if self.allowed_units.contains(&ByteCountFormatterUnits::UseKB) {
+        } else if self.allowed_units.contains(&CountFormatterUnits::UseKB) {
             unit_str = "KB".to_string();
             bytes /= 10_i128.pow(3);
-        } else if self.allowed_units.contains(&ByteCountFormatterUnits::UseMB) {
+        } else if self.allowed_units.contains(&CountFormatterUnits::UseMB) {
             unit_str = "MB".to_string();
             bytes /= 10_i128.pow(6);
-        } else if self.allowed_units.contains(&ByteCountFormatterUnits::UseGB) {
+        } else if self.allowed_units.contains(&CountFormatterUnits::UseGB) {
             unit_str = "GB".to_string();
             bytes /= 10_i128.pow(9);
-        } else if self.allowed_units.contains(&ByteCountFormatterUnits::UseTB) {
+        } else if self.allowed_units.contains(&CountFormatterUnits::UseTB) {
             unit_str = "TB".to_string();
             bytes /= 10_i128.pow(12);
-        } else if self.allowed_units.contains(&ByteCountFormatterUnits::UsePB) {
+        } else if self.allowed_units.contains(&CountFormatterUnits::UsePB) {
             unit_str = "PB".to_string();
             bytes /= 10_i128.pow(15);
-        } else if self.allowed_units.contains(&ByteCountFormatterUnits::UseEB) {
+        } else if self.allowed_units.contains(&CountFormatterUnits::UseEB) {
             unit_str = "EB".to_string();
             bytes /= 10_i128.pow(18);
-        } else if self.allowed_units.contains(&ByteCountFormatterUnits::UseZB) {
+        } else if self.allowed_units.contains(&CountFormatterUnits::UseZB) {
             unit_str = "ZB".to_string();
             bytes /= 10_i128.pow(21);
         } else if self
             .allowed_units
-            .contains(&ByteCountFormatterUnits::UseYBOrHigher)
+            .contains(&CountFormatterUnits::UseYBOrHigher)
         {
             unit_str = "YB".to_string();
             bytes /= 10_i128.pow(24);
         } else {
             let mut units_in_bytes = HashMap::new();
-            units_in_bytes.insert(ByteCountFormatterUnits::UseBytes, 0_i128);
-            units_in_bytes.insert(ByteCountFormatterUnits::UseKB, 10_i128.pow(3));
-            units_in_bytes.insert(ByteCountFormatterUnits::UseMB, 10_i128.pow(6));
-            units_in_bytes.insert(ByteCountFormatterUnits::UseGB, 10_i128.pow(9));
-            units_in_bytes.insert(ByteCountFormatterUnits::UseTB, 10_i128.pow(12));
-            units_in_bytes.insert(ByteCountFormatterUnits::UsePB, 10_i128.pow(15));
-            units_in_bytes.insert(ByteCountFormatterUnits::UseEB, 10_i128.pow(18));
-            units_in_bytes.insert(ByteCountFormatterUnits::UseZB, 10_i128.pow(21));
-            units_in_bytes.insert(ByteCountFormatterUnits::UseYBOrHigher, 10_i128.pow(24));
+            units_in_bytes.insert(CountFormatterUnits::UseBytes, 0_i128);
+            units_in_bytes.insert(CountFormatterUnits::UseKB, 10_i128.pow(3));
+            units_in_bytes.insert(CountFormatterUnits::UseMB, 10_i128.pow(6));
+            units_in_bytes.insert(CountFormatterUnits::UseGB, 10_i128.pow(9));
+            units_in_bytes.insert(CountFormatterUnits::UseTB, 10_i128.pow(12));
+            units_in_bytes.insert(CountFormatterUnits::UsePB, 10_i128.pow(15));
+            units_in_bytes.insert(CountFormatterUnits::UseEB, 10_i128.pow(18));
+            units_in_bytes.insert(CountFormatterUnits::UseZB, 10_i128.pow(21));
+            units_in_bytes.insert(CountFormatterUnits::UseYBOrHigher, 10_i128.pow(24));
 
             let mut closest_value = i128::MAX;
 
@@ -188,21 +183,19 @@ impl ByteCountFormatter {
         }
     }
 
-    fn get_allowed_units(&self, allowed_units: &mut Vec<ByteCountFormatterUnits>) {
+    fn get_allowed_units(&self, allowed_units: &mut Vec<CountFormatterUnits>) {
         if self.allowed_units.is_empty()
-            || self
-                .allowed_units
-                .contains(&ByteCountFormatterUnits::UseAll)
+            || self.allowed_units.contains(&CountFormatterUnits::UseAll)
         {
-            allowed_units.push(ByteCountFormatterUnits::UseBytes);
-            allowed_units.push(ByteCountFormatterUnits::UseKB);
-            allowed_units.push(ByteCountFormatterUnits::UseMB);
-            allowed_units.push(ByteCountFormatterUnits::UseGB);
-            allowed_units.push(ByteCountFormatterUnits::UseTB);
-            allowed_units.push(ByteCountFormatterUnits::UsePB);
-            allowed_units.push(ByteCountFormatterUnits::UseEB);
-            allowed_units.push(ByteCountFormatterUnits::UseZB);
-            allowed_units.push(ByteCountFormatterUnits::UseYBOrHigher);
+            allowed_units.push(CountFormatterUnits::UseBytes);
+            allowed_units.push(CountFormatterUnits::UseKB);
+            allowed_units.push(CountFormatterUnits::UseMB);
+            allowed_units.push(CountFormatterUnits::UseGB);
+            allowed_units.push(CountFormatterUnits::UseTB);
+            allowed_units.push(CountFormatterUnits::UsePB);
+            allowed_units.push(CountFormatterUnits::UseEB);
+            allowed_units.push(CountFormatterUnits::UseZB);
+            allowed_units.push(CountFormatterUnits::UseYBOrHigher);
         } else {
             for units in &self.allowed_units {
                 allowed_units.push(*units);
@@ -211,9 +204,9 @@ impl ByteCountFormatter {
     }
 }
 
-impl Default for ByteCountFormatter {
+impl Default for CountFormatter {
     fn default() -> Self {
-        ByteCountFormatter {
+        CountFormatter {
             allowed_units: Vec::new(),
             includes_unit: true,
             includes_count: true,
@@ -230,7 +223,7 @@ mod tests {
 
     #[test]
     fn test_string_from_byte_count() {
-        let formatter = ByteCountFormatter::new();
+        let formatter = CountFormatter::new();
 
         // Test with default settings
         assert_eq!(formatter.string_from_byte_count(0), "0 bytes");
@@ -264,12 +257,12 @@ mod tests {
         );
 
         // Test with custom settings
-        let mut custom_formatter = ByteCountFormatter::new();
+        let mut custom_formatter = CountFormatter::new();
         custom_formatter.allowed_units = vec![
-            ByteCountFormatterUnits::UseBytes,
-            ByteCountFormatterUnits::UseMB,
-            ByteCountFormatterUnits::UseGB,
-            ByteCountFormatterUnits::UseYBOrHigher,
+            CountFormatterUnits::UseBytes,
+            CountFormatterUnits::UseMB,
+            CountFormatterUnits::UseGB,
+            CountFormatterUnits::UseYBOrHigher,
         ]
         .into_iter()
         .collect();
@@ -292,16 +285,16 @@ mod tests {
 
     #[test]
     fn test_allowed_units() {
-        let mut formatter = ByteCountFormatter::new();
+        let mut formatter = CountFormatter::new();
 
         // Test with default settings
         assert_eq!(formatter.allowed_units, vec![]);
 
         // Test after setting custom units
         formatter.allowed_units = vec![
-            ByteCountFormatterUnits::UseKB,
-            ByteCountFormatterUnits::UseMB,
-            ByteCountFormatterUnits::UseGB,
+            CountFormatterUnits::UseKB,
+            CountFormatterUnits::UseMB,
+            CountFormatterUnits::UseGB,
         ]
         .into_iter()
         .collect();
@@ -309,16 +302,16 @@ mod tests {
         assert_eq!(
             formatter.allowed_units,
             vec![
-                ByteCountFormatterUnits::UseKB,
-                ByteCountFormatterUnits::UseMB,
-                ByteCountFormatterUnits::UseGB,
+                CountFormatterUnits::UseKB,
+                CountFormatterUnits::UseMB,
+                CountFormatterUnits::UseGB,
             ]
         );
     }
 
     #[test]
     fn test_includes_unit() {
-        let mut formatter = ByteCountFormatter::new();
+        let mut formatter = CountFormatter::new();
 
         // Test with default settings
         assert!(formatter.includes_unit);
@@ -330,7 +323,7 @@ mod tests {
 
     #[test]
     fn test_includes_count() {
-        let mut formatter = ByteCountFormatter::new();
+        let mut formatter = CountFormatter::new();
 
         // Test with default settings
         assert!(formatter.includes_count);
