@@ -15,7 +15,7 @@ where
     T: Clone + Default,
 {
     fn default() -> Self {
-        Node {
+        Self {
             data: T::default(),
             next: None,
         }
@@ -51,8 +51,8 @@ pub struct Stack<T> {
 impl<T> Stack<T> {
     /// Creates an empty stack.
     #[must_use]
-    pub fn new() -> Self {
-        Stack { top: None, len: 0 }
+    pub const fn new() -> Self {
+        Self { top: None, len: 0 }
     }
 
     /// Pushes a value onto the top of the stack.
@@ -87,7 +87,7 @@ impl<T> Stack<T> {
     ///
     /// Returns `true` if the stack is empty, `false` otherwise.
     #[must_use]
-    pub fn is_empty(&self) -> bool {
+    pub const fn is_empty(&self) -> bool {
         self.len == 0
     }
 
@@ -97,7 +97,7 @@ impl<T> Stack<T> {
     ///
     /// The number of elements in the stack.
     #[must_use]
-    pub fn len(&self) -> usize {
+    pub const fn len(&self) -> usize {
         self.len
     }
 
@@ -122,7 +122,7 @@ impl<T> Stack<T> {
     ///
     /// An iterator that yields references to the elements in the stack in LIFO order.
     #[must_use]
-    pub fn iter(&self) -> iter::Iter<'_, T>
+    pub const fn iter(&self) -> iter::Iter<'_, T>
     where
         T: Clone,
     {
@@ -133,7 +133,7 @@ impl<T> Stack<T> {
     }
 }
 
-unsafe impl<T> Send for Stack<T> {}
+unsafe impl<T> Send for Stack<T> where T: Send {}
 unsafe impl<T> Sync for Stack<T> {}
 
 impl<T> core::fmt::Debug for Stack<T>

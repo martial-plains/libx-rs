@@ -18,7 +18,7 @@ struct Node<T> {
 
 impl<T> Node<T> {
     fn new(value: T) -> Self {
-        Node {
+        Self {
             value,
             prev: ptr::null_mut(),
             next: ptr::null_mut(),
@@ -81,8 +81,8 @@ impl<T> List<T> {
     /// assert!(list.is_empty());
     /// ```
     #[must_use]
-    pub fn new() -> Self {
-        List {
+    pub const fn new() -> Self {
+        Self {
             head: None,
             tail: None,
             length: 0,
@@ -104,8 +104,8 @@ impl<T> List<T> {
     /// assert_eq!(list.capacity(), 10);
     /// ```
     #[must_use]
-    pub fn with_capacity(capacity: usize) -> Self {
-        List {
+    pub const fn with_capacity(capacity: usize) -> Self {
+        Self {
             head: None,
             tail: None,
             length: 0,
@@ -191,12 +191,11 @@ impl<T> List<T> {
                 (*old_tail).next = new_node;
                 (*new_node).prev = old_tail;
             }
-
-            self.tail = Some(new_node);
         } else {
             self.head = Some(new_node);
-            self.tail = Some(new_node);
         }
+
+        self.tail = Some(new_node);
 
         self.length += 1;
     }
@@ -276,12 +275,11 @@ impl<T> List<T> {
                 (*old_tail).next = new_node;
                 (*new_node).prev = old_tail;
             }
-
-            self.tail = Some(new_node);
         } else {
             self.head = Some(new_node);
-            self.tail = Some(new_node);
         }
+
+        self.tail = Some(new_node);
 
         self.length += 1;
         Ok(())
@@ -384,7 +382,7 @@ impl<T> List<T> {
     /// assert_eq!(list.len(), 2);
     /// ```
     #[must_use]
-    pub fn len(&self) -> usize {
+    pub const fn len(&self) -> usize {
         self.length
     }
 
@@ -406,7 +404,7 @@ impl<T> List<T> {
     /// assert_eq!(list.is_empty(), false);
     /// ```
     #[must_use]
-    pub fn is_empty(&self) -> bool {
+    pub const fn is_empty(&self) -> bool {
         self.length == 0
     }
 
@@ -421,7 +419,7 @@ impl<T> List<T> {
     /// assert_eq!(list.capacity(), 10);
     /// ```
     #[must_use]
-    pub fn capacity(&self) -> usize {
+    pub const fn capacity(&self) -> usize {
         self.capacity
     }
 
@@ -567,7 +565,7 @@ impl<T> List<T> {
             let new_node = Box::into_raw(Box::new(Node::new(value)));
 
             let mut current_index = 0;
-            let mut current_node = self.head.unwrap();
+            let mut current_node = self.head.expect("head is None");
 
             while current_index < index {
                 unsafe {
@@ -638,7 +636,7 @@ impl<T> List<T> {
             }
         } else {
             let mut current_index = 0;
-            let mut current_node = self.head.unwrap();
+            let mut current_node = self.head.expect("head is None");
 
             while current_index < index {
                 unsafe {
@@ -824,7 +822,7 @@ impl<T> List<T> {
     /// assert_eq!(iterator.next(), None);
     /// ```
     #[must_use]
-    pub fn iter(&self) -> iter::Iter<'_, T>
+    pub const fn iter(&self) -> iter::Iter<'_, T>
     where
         T: Clone,
     {
@@ -877,7 +875,7 @@ impl<T> Index<usize> for List<T> {
         assert!(index < self.length, "Index out of bounds");
 
         // Traverse the list to find the node at the specified index
-        let mut current = self.head.unwrap();
+        let mut current = self.head.expect("head is None");
         for _ in 0..index {
             unsafe {
                 let next = (*current).next;

@@ -24,16 +24,16 @@ pub enum CountFormatterUnits {
 impl fmt::Display for CountFormatterUnits {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            CountFormatterUnits::UseBytes => write!(f, "bytes"),
-            CountFormatterUnits::UseKB => write!(f, "KB"),
-            CountFormatterUnits::UseMB => write!(f, "MB"),
-            CountFormatterUnits::UseGB => write!(f, "GB"),
-            CountFormatterUnits::UseTB => write!(f, "TB"),
-            CountFormatterUnits::UsePB => write!(f, "PB"),
-            CountFormatterUnits::UseEB => write!(f, "EB"),
-            CountFormatterUnits::UseZB => write!(f, "ZB"),
-            CountFormatterUnits::UseYBOrHigher => write!(f, "YB"),
-            CountFormatterUnits::UseAll => write!(f, "All"),
+            Self::UseBytes => write!(f, "bytes"),
+            Self::UseKB => write!(f, "KB"),
+            Self::UseMB => write!(f, "MB"),
+            Self::UseGB => write!(f, "GB"),
+            Self::UseTB => write!(f, "TB"),
+            Self::UsePB => write!(f, "PB"),
+            Self::UseEB => write!(f, "EB"),
+            Self::UseZB => write!(f, "ZB"),
+            Self::UseYBOrHigher => write!(f, "YB"),
+            Self::UseAll => write!(f, "All"),
         }
     }
 }
@@ -206,7 +206,7 @@ impl CountFormatter {
 
 impl Default for CountFormatter {
     fn default() -> Self {
-        CountFormatter {
+        Self {
             allowed_units: Vec::new(),
             includes_unit: true,
             includes_count: true,

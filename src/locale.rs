@@ -25,7 +25,7 @@ unsafe impl Sync for Locale {}
 
 impl Locale {
     #[must_use]
-    pub fn new(identifier: String) -> Self {
+    pub const fn new(identifier: String) -> Self {
         Self { identifier }
     }
 
@@ -35,15 +35,15 @@ impl Locale {
     }
 
     #[must_use]
-    pub fn current() -> Locale {
+    pub fn current() -> Self {
         if let Some(lang) = get_env_var("LANG") {
             if let Some(locale) = lang.split('.').next() {
-                return Locale::new(locale.to_string());
+                return Self::new(locale.to_string());
             }
         }
 
         // Fallback to a default locale if LANG is not set
-        Locale::new("en_US".to_string())
+        Self::new("en_US".to_string())
     }
 
     #[must_use]

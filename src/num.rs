@@ -21,187 +21,187 @@ impl Number {
     #[must_use]
     pub fn bool(&self) -> bool {
         match self {
-            Number::Bool(value) => *value,
-            Number::Int(value) => *value != 0,
-            Number::Int8(value) => *value != 0,
-            Number::Int16(value) => *value != 0,
-            Number::Int32(value) => *value != 0,
-            Number::UInt(value) => *value != 0,
-            Number::UInt8(value) => *value != 0,
-            Number::UInt16(value) => *value != 0,
-            Number::UInt32(value) => *value != 0,
-            Number::Float(value) => *value != 0.0,
-            Number::Double(value) => *value != 0.0,
+            Self::Bool(value) => *value,
+            Self::Int(value) => *value != 0,
+            Self::Int8(value) => *value != 0,
+            Self::Int16(value) => *value != 0,
+            Self::Int32(value) => *value != 0,
+            Self::UInt(value) => *value != 0,
+            Self::UInt8(value) => *value != 0,
+            Self::UInt16(value) => *value != 0,
+            Self::UInt32(value) => *value != 0,
+            Self::Float(value) => *value != 0.0,
+            Self::Double(value) => *value != 0.0,
         }
     }
 
     #[must_use]
     pub fn int(&self) -> isize {
         match self {
-            Number::Bool(value) => isize::from(*value),
-            Number::Int(value) => *value,
-            Number::Int8(value) => *value as isize,
-            Number::Int16(value) => *value as isize,
-            Number::Int32(value) => *value as isize,
-            Number::UInt(value) => *value as isize,
-            Number::UInt8(value) => *value as isize,
-            Number::UInt16(value) => *value as isize,
-            Number::UInt32(value) => *value as isize,
-            Number::Float(value) => *value as isize,
-            Number::Double(value) => *value as isize,
+            Self::Bool(value) => isize::from(*value),
+            Self::Int(value) => *value,
+            Self::Int8(value) => *value as isize,
+            Self::Int16(value) => *value as isize,
+            Self::Int32(value) => *value as isize,
+            Self::UInt(value) => *value as isize,
+            Self::UInt8(value) => *value as isize,
+            Self::UInt16(value) => *value as isize,
+            Self::UInt32(value) => *value as isize,
+            Self::Float(value) => *value as isize,
+            Self::Double(value) => *value as isize,
         }
     }
 
     #[must_use]
-    pub fn int8(&self) -> i8 {
+    pub const fn int8(&self) -> i8 {
         match self {
-            Number::Bool(value) => *value as i8,
-            Number::Int(value) => *value as i8,
-            Number::Int8(value) => *value,
-            Number::Int16(value) => *value as i8,
-            Number::Int32(value) => *value as i8,
-            Number::UInt(value) => *value as i8,
-            Number::UInt8(value) => *value as i8,
-            Number::UInt16(value) => *value as i8,
-            Number::UInt32(value) => *value as i8,
-            Number::Float(value) => *value as i8,
-            Number::Double(value) => *value as i8,
+            Self::Bool(value) => *value as i8,
+            Self::Int(value) => *value as i8,
+            Self::Int8(value) => *value,
+            Self::Int16(value) => *value as i8,
+            Self::Int32(value) => *value as i8,
+            Self::UInt(value) => *value as i8,
+            Self::UInt8(value) => *value as i8,
+            Self::UInt16(value) => *value as i8,
+            Self::UInt32(value) => *value as i8,
+            Self::Float(value) => *value as i8,
+            Self::Double(value) => *value as i8,
         }
     }
 
     #[must_use]
-    pub fn int16(&self) -> i16 {
+    pub const fn int16(&self) -> i16 {
         match self {
-            Number::Bool(value) => *value as i16,
-            Number::Int(value) => *value as i16,
-            Number::Int8(value) => *value as i16,
-            Number::Int16(value) => *value,
-            Number::Int32(value) => *value as i16,
-            Number::UInt(value) => *value as i16,
-            Number::UInt8(value) => *value as i16,
-            Number::UInt16(value) => *value as i16,
-            Number::UInt32(value) => *value as i16,
-            Number::Float(value) => *value as i16,
-            Number::Double(value) => *value as i16,
+            Self::Bool(value) => *value as i16,
+            Self::Int(value) => *value as i16,
+            Self::Int8(value) => *value as i16,
+            Self::Int16(value) => *value,
+            Self::Int32(value) => *value as i16,
+            Self::UInt(value) => *value as i16,
+            Self::UInt8(value) => *value as i16,
+            Self::UInt16(value) => *value as i16,
+            Self::UInt32(value) => *value as i16,
+            Self::Float(value) => *value as i16,
+            Self::Double(value) => *value as i16,
         }
     }
 
     #[must_use]
-    pub fn int32(&self) -> i32 {
+    pub const fn int32(&self) -> i32 {
         match self {
-            Number::Bool(value) => *value as i32,
-            Number::Int(value) => *value as i32,
-            Number::Int8(value) => *value as i32,
-            Number::Int16(value) => *value as i32,
-            Number::Int32(value) => *value,
-            Number::UInt(value) => *value as i32,
-            Number::UInt8(value) => *value as i32,
-            Number::UInt16(value) => *value as i32,
-            Number::UInt32(value) => *value as i32,
-            Number::Float(value) => *value as i32,
-            Number::Double(value) => *value as i32,
+            Self::Bool(value) => *value as i32,
+            Self::Int(value) => *value as i32,
+            Self::Int8(value) => *value as i32,
+            Self::Int16(value) => *value as i32,
+            Self::Int32(value) => *value,
+            Self::UInt(value) => *value as i32,
+            Self::UInt8(value) => *value as i32,
+            Self::UInt16(value) => *value as i32,
+            Self::UInt32(value) => *value as i32,
+            Self::Float(value) => *value as i32,
+            Self::Double(value) => *value as i32,
         }
     }
 
     #[must_use]
-    pub fn uint(&self) -> usize {
+    pub const fn uint(&self) -> usize {
         match self {
-            Number::Bool(value) => *value as usize,
-            Number::Int(value) => *value as usize,
-            Number::Int8(value) => *value as usize,
-            Number::Int16(value) => *value as usize,
-            Number::Int32(value) => *value as usize,
-            Number::UInt(value) => *value,
-            Number::UInt8(value) => *value as usize,
-            Number::UInt16(value) => *value as usize,
-            Number::UInt32(value) => *value as usize,
-            Number::Float(value) => *value as usize,
-            Number::Double(value) => *value as usize,
+            Self::Bool(value) => *value as usize,
+            Self::Int(value) => *value as usize,
+            Self::Int8(value) => *value as usize,
+            Self::Int16(value) => *value as usize,
+            Self::Int32(value) => *value as usize,
+            Self::UInt(value) => *value,
+            Self::UInt8(value) => *value as usize,
+            Self::UInt16(value) => *value as usize,
+            Self::UInt32(value) => *value as usize,
+            Self::Float(value) => *value as usize,
+            Self::Double(value) => *value as usize,
         }
     }
 
     #[must_use]
-    pub fn uint8(&self) -> u8 {
+    pub const fn uint8(&self) -> u8 {
         match self {
-            Number::Bool(value) => *value as u8,
-            Number::Int(value) => *value as u8,
-            Number::Int8(value) => *value as u8,
-            Number::Int16(value) => *value as u8,
-            Number::Int32(value) => *value as u8,
-            Number::UInt(value) => *value as u8,
-            Number::UInt8(value) => *value,
-            Number::UInt16(value) => *value as u8,
-            Number::UInt32(value) => *value as u8,
-            Number::Float(value) => *value as u8,
-            Number::Double(value) => *value as u8,
+            Self::Bool(value) => *value as u8,
+            Self::Int(value) => *value as u8,
+            Self::Int8(value) => *value as u8,
+            Self::Int16(value) => *value as u8,
+            Self::Int32(value) => *value as u8,
+            Self::UInt(value) => *value as u8,
+            Self::UInt8(value) => *value,
+            Self::UInt16(value) => *value as u8,
+            Self::UInt32(value) => *value as u8,
+            Self::Float(value) => *value as u8,
+            Self::Double(value) => *value as u8,
         }
     }
 
     #[must_use]
-    pub fn uint16(&self) -> u16 {
+    pub const fn uint16(&self) -> u16 {
         match self {
-            Number::Bool(value) => *value as u16,
-            Number::Int(value) => *value as u16,
-            Number::Int8(value) => *value as u16,
-            Number::Int16(value) => *value as u16,
-            Number::Int32(value) => *value as u16,
-            Number::UInt(value) => *value as u16,
-            Number::UInt8(value) => *value as u16,
-            Number::UInt16(value) => *value,
-            Number::UInt32(value) => *value as u16,
-            Number::Float(value) => *value as u16,
-            Number::Double(value) => *value as u16,
+            Self::Bool(value) => *value as u16,
+            Self::Int(value) => *value as u16,
+            Self::Int8(value) => *value as u16,
+            Self::Int16(value) => *value as u16,
+            Self::Int32(value) => *value as u16,
+            Self::UInt(value) => *value as u16,
+            Self::UInt8(value) => *value as u16,
+            Self::UInt16(value) => *value,
+            Self::UInt32(value) => *value as u16,
+            Self::Float(value) => *value as u16,
+            Self::Double(value) => *value as u16,
         }
     }
 
     #[must_use]
-    pub fn uint32(&self) -> u32 {
+    pub const fn uint32(&self) -> u32 {
         match self {
-            Number::Bool(value) => *value as u32,
-            Number::Int(value) => *value as u32,
-            Number::Int8(value) => *value as u32,
-            Number::Int16(value) => *value as u32,
-            Number::Int32(value) => *value as u32,
-            Number::UInt(value) => *value as u32,
-            Number::UInt8(value) => *value as u32,
-            Number::UInt16(value) => *value as u32,
-            Number::UInt32(value) => *value,
-            Number::Float(value) => *value as u32,
-            Number::Double(value) => *value as u32,
+            Self::Bool(value) => *value as u32,
+            Self::Int(value) => *value as u32,
+            Self::Int8(value) => *value as u32,
+            Self::Int16(value) => *value as u32,
+            Self::Int32(value) => *value as u32,
+            Self::UInt(value) => *value as u32,
+            Self::UInt8(value) => *value as u32,
+            Self::UInt16(value) => *value as u32,
+            Self::UInt32(value) => *value,
+            Self::Float(value) => *value as u32,
+            Self::Double(value) => *value as u32,
         }
     }
 
     #[must_use]
-    pub fn float(&self) -> f32 {
+    pub const fn float(&self) -> f32 {
         match self {
-            Number::Bool(value) => *value as u8 as f32,
-            Number::Int(value) => *value as f32,
-            Number::Int8(value) => *value as f32,
-            Number::Int16(value) => *value as f32,
-            Number::Int32(value) => *value as f32,
-            Number::UInt(value) => *value as f32,
-            Number::UInt8(value) => *value as f32,
-            Number::UInt16(value) => *value as f32,
-            Number::UInt32(value) => *value as f32,
-            Number::Float(value) => *value,
-            Number::Double(value) => *value as f32,
+            Self::Bool(value) => *value as u8 as f32,
+            Self::Int(value) => *value as f32,
+            Self::Int8(value) => *value as f32,
+            Self::Int16(value) => *value as f32,
+            Self::Int32(value) => *value as f32,
+            Self::UInt(value) => *value as f32,
+            Self::UInt8(value) => *value as f32,
+            Self::UInt16(value) => *value as f32,
+            Self::UInt32(value) => *value as f32,
+            Self::Float(value) => *value,
+            Self::Double(value) => *value as f32,
         }
     }
 
     #[must_use]
-    pub fn double(&self) -> f64 {
+    pub const fn double(&self) -> f64 {
         match self {
-            Number::Bool(value) => *value as u8 as f64,
-            Number::Int(value) => *value as f64,
-            Number::Int8(value) => *value as f64,
-            Number::Int16(value) => *value as f64,
-            Number::Int32(value) => *value as f64,
-            Number::UInt(value) => *value as f64,
-            Number::UInt8(value) => *value as f64,
-            Number::UInt16(value) => *value as f64,
-            Number::UInt32(value) => *value as f64,
-            Number::Float(value) => *value as f64,
-            Number::Double(value) => *value,
+            Self::Bool(value) => *value as u8 as f64,
+            Self::Int(value) => *value as f64,
+            Self::Int8(value) => *value as f64,
+            Self::Int16(value) => *value as f64,
+            Self::Int32(value) => *value as f64,
+            Self::UInt(value) => *value as f64,
+            Self::UInt8(value) => *value as f64,
+            Self::UInt16(value) => *value as f64,
+            Self::UInt32(value) => *value as f64,
+            Self::Float(value) => *value as f64,
+            Self::Double(value) => *value,
         }
     }
 }
