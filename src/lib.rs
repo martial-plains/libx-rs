@@ -1,6 +1,11 @@
 #![feature(core_intrinsics, decl_macro)]
 #![no_std]
-#![warn(clippy::all, clippy::pedantic, missing_debug_implementations)]
+#![warn(
+    clippy::pedantic,
+    clippy::nursery,
+    clippy::unwrap_used,
+    missing_debug_implementations
+)]
 
 extern crate alloc;
 
