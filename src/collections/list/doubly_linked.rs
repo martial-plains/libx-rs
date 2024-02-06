@@ -1078,7 +1078,7 @@ mod tests {
     }
 
     #[test]
-    #[should_panic = "Removing from an empty list should panic"]
+    #[should_panic = "Index out of bounds"]
     fn test_remove_by_index_empty_list() {
         let mut list: List<i32> = List::new();
         assert_eq!(list.len(), 0);
