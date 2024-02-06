@@ -7,4 +7,4 @@ edition = "2021"
 
 [dependencies]
 libc = "0.2.144"
-hashbrown = "0.13.2"
+hashbrown = "0.14.3"
