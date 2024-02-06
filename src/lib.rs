@@ -9,6 +9,7 @@
 
 extern crate alloc;
 
+pub mod ciphers;
 pub mod collections;
 pub mod formatting;
 pub mod locale;
