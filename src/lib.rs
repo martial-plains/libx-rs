@@ -1,4 +1,4 @@
-#![feature(const_trait_impl, core_intrinsics, decl_macro, effects)]
+#![feature(cfg_match, const_trait_impl, core_intrinsics, decl_macro, effects)]
 #![no_std]
 #![warn(
     clippy::pedantic,

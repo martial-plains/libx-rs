@@ -1,7 +1,10 @@
-use alloc::{borrow::ToOwned, format, string::String, vec::Vec};
+use alloc::{
+    borrow::ToOwned,
+    format,
+    string::{String, ToString},
+    vec::Vec,
+};
 use hashbrown::HashMap;
-
-use crate::utils::get_env_var;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum IdentifierType {
@@ -32,16 +35,23 @@ impl Locale {
         &self.identifier
     }
 
-    #[must_use]
-    pub fn current() -> Self {
-        if let Some(lang) = get_env_var("LANG") {
-            if let Some(locale) = lang.split('.').next() {
-                return Self::new(locale);
+    cfg_match! {
+        cfg(target_os = "macos") => {
+            #[must_use]
+            pub fn current() -> Self {
+                use icrate::Foundation::NSLocale;
+
+                let identifier = unsafe {NSLocale::currentLocale().localeIdentifier()};
+                Self::new(&identifier.to_string())
             }
         }
 
-        // Fallback to a default locale if LANG is not set
-        Self::new("en_US")
+        _ => {
+            #[must_use]
+            pub fn current() -> Self {
+                unimplemented!()
+            }
+        }
     }
 
     #[must_use]
