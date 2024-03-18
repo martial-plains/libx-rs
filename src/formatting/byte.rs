@@ -1,5 +1,3 @@
-use core::intrinsics::roundf64;
-
 use alloc::{
     fmt, format,
     string::{String, ToString},
@@ -162,13 +160,10 @@ impl CountFormatter {
                     decimal_part.insert(1, '.');
                 }
 
-                let float = unsafe {
-                    roundf64(
-                        decimal_part
-                            .parse::<f64>()
-                            .expect("Could not parse decimal part to float"),
-                    )
-                };
+                let float = decimal_part
+                    .parse::<f64>()
+                    .expect("Could not parse decimal part to float")
+                    .round();
 
                 (float as i128).to_string()
             };
