@@ -1,8 +1,4 @@
-use alloc::{
-    format,
-    string::{String, ToString},
-    vec::Vec,
-};
+use alloc::{borrow::ToOwned, format, string::String, vec::Vec};
 use hashbrown::HashMap;
 
 use crate::utils::get_env_var;
@@ -25,8 +21,10 @@ unsafe impl Sync for Locale {}
 
 impl Locale {
     #[must_use]
-    pub const fn new(identifier: String) -> Self {
-        Self { identifier }
+    pub const fn new(identifier: &str) -> Self {
+        Self {
+            identifier: identifier.to_owned(),
+        }
     }
 
     #[must_use]
@@ -38,12 +36,12 @@ impl Locale {
     pub fn current() -> Self {
         if let Some(lang) = get_env_var("LANG") {
             if let Some(locale) = lang.split('.').next() {
-                return Self::new(locale.to_string());
+                return Self::new(locale);
             }
         }
 
         // Fallback to a default locale if LANG is not set
-        Self::new("en_US".to_string())
+        Self::new("en_US")
     }
 
     #[must_use]
