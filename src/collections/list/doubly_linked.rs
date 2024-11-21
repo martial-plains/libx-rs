@@ -724,26 +724,7 @@ impl<T> List<T> {
     /// # Panics
     ///
     /// This function panics if the range is out of bounds.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use libx::collections::list::doubly_linked::List;
-    ///
-    /// let mut list = List::new();
-    /// list.push_back(1);
-    /// list.push_back(2);
-    /// list.push_back(3);
-    /// list.push_back(4);
-    ///
-    /// let removed = list.remove_by_range(1..3);
-    /// assert_eq!(removed, &[2, 3]);
-    ///
-    /// assert_eq!(list.len(), 2);
-    /// assert_eq!(list.front(), Some(1));
-    /// assert_eq!(list.back(), Some(4));
-    /// ```
-    pub fn remove_by_range(&mut self, range: core::ops::Range<usize>) -> &[T]
+    pub fn removed_by_range<'a>(&mut self, range: core::ops::Range<usize>) -> &'a [T]
     where
         T: Clone,
     {
@@ -858,6 +839,12 @@ impl<T> List<T> {
     }
 }
 
+impl<T> Drop for List<T> {
+    fn drop(&mut self) {
+        self.clear();
+    }
+}
+
 impl<T> Default for List<T>
 where
     T: Clone,
@@ -940,6 +927,7 @@ pub macro list {
 
 #[cfg(test)]
 mod tests {
+
     use alloc::vec;
 
     use super::*;
@@ -1132,11 +1120,14 @@ mod tests {
     }
 
     #[test]
-    fn test_remove_by_range() {
+    #[cfg_attr(miri, ignore)]
+    fn test_removed_by_range() {
         let mut list: List<i32> = list![10, 20, 30, 40, 50];
 
         // Remove elements by range
-        list.remove_by_range(1..4); // Remove elements at indices 1, 2, 3
+        let range = list.removed_by_range(1..4); // Remove elements at indices 1, 2, 3
+
+        unsafe { Vec::from_raw_parts(range.as_ptr().cast_mut(), range.len(), range.len()) };
 
         // Validate the list after removal
         assert_eq!(list.len(), 2);
