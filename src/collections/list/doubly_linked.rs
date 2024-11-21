@@ -17,7 +17,7 @@ struct Node<T> {
 }
 
 impl<T> Node<T> {
-    fn new(value: T) -> Self {
+    const fn new(value: T) -> Self {
         Self {
             value,
             prev: ptr::null_mut(),

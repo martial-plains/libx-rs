@@ -12,7 +12,7 @@ pub fn get_env_var(var_name: &str) -> Option<String> {
     let (name, value) = var_name.split_at(i);
 
     let value = match unsafe { libc::getenv(name.as_ptr().cast::<libc::c_char>()) } {
-        _ if value.starts_with(&[b'=']) => {
+        _ if value.starts_with(b"=") => {
             let value = &value[1..];
             if value.is_empty() {
                 None

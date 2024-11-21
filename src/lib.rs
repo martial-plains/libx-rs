@@ -1,5 +1,4 @@
-#![feature(cfg_match, const_trait_impl, decl_macro, effects)]
-#![no_std]
+#![feature(cfg_match, const_trait_impl, decl_macro)]
 #![warn(
     clippy::pedantic,
     clippy::nursery,
@@ -8,11 +7,11 @@
 )]
 
 extern crate alloc;
+extern crate core;
 
 pub mod ciphers;
 pub mod collections;
 pub mod formatting;
-pub mod locale;
 pub mod num;
 
 pub(crate) mod utils;

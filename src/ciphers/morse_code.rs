@@ -1,4 +1,4 @@
-use alloc::{borrow::ToOwned, string::String, vec::Vec};
+use alloc::{string::String, vec::Vec};
 
 #[must_use]
 pub fn char_to_morse(c: char) -> &'static str {
@@ -83,7 +83,7 @@ pub fn morse_to_char(s: &str) -> char {
         "---.." => '8',
         "----." => '9',
         "-----" => '0',
-        _ => panic!("Found invalid Morse code: {}", s),
+        _ => panic!("Found invalid Morse code: {s}"),
     }
 }
 

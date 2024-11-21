@@ -150,7 +150,7 @@ where
             } else {
                 write!(f, " -> {:?}", node.data)?;
             }
-            iter = node.next.clone();
+            iter.clone_from(&node.next);
         }
         Ok(())
     }

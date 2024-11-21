@@ -2,6 +2,8 @@ use core::{fmt, str::FromStr};
 
 use alloc::string::String;
 
+pub mod traits;
+
 #[derive(Debug, PartialEq, PartialOrd)]
 pub enum Number {
     Bool(bool),
