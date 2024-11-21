@@ -724,7 +724,7 @@ impl<T> List<T> {
     /// # Panics
     ///
     /// This function panics if the range is out of bounds.
-    pub fn removed_by_range<'a>(&mut self, range: core::ops::Range<usize>) -> &'a [T]
+    pub fn remove_by_range<'a>(&mut self, range: core::ops::Range<usize>) -> &'a [T]
     where
         T: Clone,
     {
@@ -1121,11 +1121,11 @@ mod tests {
 
     #[test]
     #[cfg_attr(miri, ignore)]
-    fn test_removed_by_range() {
+    fn test_remove_by_range() {
         let mut list: List<i32> = list![10, 20, 30, 40, 50];
 
         // Remove elements by range
-        let range = list.removed_by_range(1..4); // Remove elements at indices 1, 2, 3
+        let range = list.remove_by_range(1..4); // Remove elements at indices 1, 2, 3
 
         unsafe { Vec::from_raw_parts(range.as_ptr().cast_mut(), range.len(), range.len()) };
 
