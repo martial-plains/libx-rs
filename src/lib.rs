@@ -1,3 +1,4 @@
+#![no_std]
 #![feature(cfg_match, const_trait_impl, decl_macro)]
 #![warn(
     clippy::pedantic,

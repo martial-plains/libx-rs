@@ -5,6 +5,8 @@ use alloc::{
 };
 use hashbrown::HashMap;
 
+use crate::num::traits::FloatingPoint;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum CountFormatterUnits {
     UseBytes,
@@ -163,7 +165,7 @@ impl CountFormatter {
                 let float = decimal_part
                     .parse::<f64>()
                     .expect("Could not parse decimal part to float")
-                    .round();
+                    .rounded();
 
                 (float as i128).to_string()
             };

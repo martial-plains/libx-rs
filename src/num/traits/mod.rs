@@ -1,4 +1,4 @@
-use std::{
+use core::{
     hash::Hash,
     ops::{
         Add, AddAssign, BitOr, BitOrAssign, BitXor, Mul, MulAssign, Neg, Rem, RemAssign, Shl,
@@ -594,7 +594,6 @@ impl FixedWidthInteger for u8 {
 
     fn divided_reporting_overflow(&self, rhs: Self) -> (Self, bool) {
         if rhs == 0 {
-            // Handle division by zero, returning zero and a boolean flag indicating overflow.
             (0, true)
         } else {
             self.overflowing_div(rhs)
@@ -607,7 +606,6 @@ impl FixedWidthInteger for u8 {
 
     fn remainder_reporting_overflow(&self, rhs: Self) -> (Self, bool) {
         if rhs == 0 {
-            // Handle division by zero for remainder, returning zero and a boolean flag indicating overflow.
             (0, true)
         } else {
             self.overflowing_rem(rhs)
@@ -657,7 +655,6 @@ impl FixedWidthInteger for u16 {
 
     fn divided_reporting_overflow(&self, rhs: Self) -> (Self, bool) {
         if rhs == 0 {
-            // Handle division by zero, returning zero and a boolean flag indicating overflow.
             (0, true)
         } else {
             self.overflowing_div(rhs)
@@ -670,7 +667,6 @@ impl FixedWidthInteger for u16 {
 
     fn remainder_reporting_overflow(&self, rhs: Self) -> (Self, bool) {
         if rhs == 0 {
-            // Handle division by zero for remainder, returning zero and a boolean flag indicating overflow.
             (0, true)
         } else {
             self.overflowing_rem(rhs)
@@ -720,7 +716,6 @@ impl FixedWidthInteger for u32 {
 
     fn divided_reporting_overflow(&self, rhs: Self) -> (Self, bool) {
         if rhs == 0 {
-            // Handle division by zero, returning zero and a boolean flag indicating overflow.
             (0, true)
         } else {
             self.overflowing_div(rhs)
@@ -733,7 +728,6 @@ impl FixedWidthInteger for u32 {
 
     fn remainder_reporting_overflow(&self, rhs: Self) -> (Self, bool) {
         if rhs == 0 {
-            // Handle division by zero for remainder, returning zero and a boolean flag indicating overflow.
             (0, true)
         } else {
             self.overflowing_rem(rhs)
@@ -783,7 +777,6 @@ impl FixedWidthInteger for u64 {
 
     fn divided_reporting_overflow(&self, rhs: Self) -> (Self, bool) {
         if rhs == 0 {
-            // Handle division by zero, returning zero and a boolean flag indicating overflow.
             (0, true)
         } else {
             self.overflowing_div(rhs)
@@ -796,7 +789,6 @@ impl FixedWidthInteger for u64 {
 
     fn remainder_reporting_overflow(&self, rhs: Self) -> (Self, bool) {
         if rhs == 0 {
-            // Handle division by zero for remainder, returning zero and a boolean flag indicating overflow.
             (0, true)
         } else {
             self.overflowing_rem(rhs)
@@ -846,7 +838,6 @@ impl FixedWidthInteger for u128 {
 
     fn divided_reporting_overflow(&self, rhs: Self) -> (Self, bool) {
         if rhs == 0 {
-            // Handle division by zero, returning zero and a boolean flag indicating overflow.
             (0, true)
         } else {
             self.overflowing_div(rhs)
@@ -859,7 +850,6 @@ impl FixedWidthInteger for u128 {
 
     fn remainder_reporting_overflow(&self, rhs: Self) -> (Self, bool) {
         if rhs == 0 {
-            // Handle division by zero for remainder, returning zero and a boolean flag indicating overflow.
             (0, true)
         } else {
             self.overflowing_rem(rhs)
@@ -909,7 +899,6 @@ impl FixedWidthInteger for i8 {
 
     fn divided_reporting_overflow(&self, rhs: Self) -> (Self, bool) {
         if rhs == 0 {
-            // Handle division by zero, returning zero and a boolean flag indicating overflow.
             (0, true)
         } else {
             self.overflowing_div(rhs)
@@ -922,7 +911,6 @@ impl FixedWidthInteger for i8 {
 
     fn remainder_reporting_overflow(&self, rhs: Self) -> (Self, bool) {
         if rhs == 0 {
-            // Handle division by zero for remainder, returning zero and a boolean flag indicating overflow.
             (0, true)
         } else {
             self.overflowing_rem(rhs)
@@ -972,7 +960,6 @@ impl FixedWidthInteger for i16 {
 
     fn divided_reporting_overflow(&self, rhs: Self) -> (Self, bool) {
         if rhs == 0 {
-            // Handle division by zero, returning zero and a boolean flag indicating overflow.
             (0, true)
         } else {
             self.overflowing_div(rhs)
@@ -985,7 +972,6 @@ impl FixedWidthInteger for i16 {
 
     fn remainder_reporting_overflow(&self, rhs: Self) -> (Self, bool) {
         if rhs == 0 {
-            // Handle division by zero for remainder, returning zero and a boolean flag indicating overflow.
             (0, true)
         } else {
             self.overflowing_rem(rhs)
@@ -1035,7 +1021,6 @@ impl FixedWidthInteger for i32 {
 
     fn divided_reporting_overflow(&self, rhs: Self) -> (Self, bool) {
         if rhs == 0 {
-            // Handle division by zero, returning zero and a boolean flag indicating overflow.
             (0, true)
         } else {
             self.overflowing_div(rhs)
@@ -1048,7 +1033,6 @@ impl FixedWidthInteger for i32 {
 
     fn remainder_reporting_overflow(&self, rhs: Self) -> (Self, bool) {
         if rhs == 0 {
-            // Handle division by zero for remainder, returning zero and a boolean flag indicating overflow.
             (0, true)
         } else {
             self.overflowing_rem(rhs)
@@ -1098,7 +1082,6 @@ impl FixedWidthInteger for i64 {
 
     fn divided_reporting_overflow(&self, rhs: Self) -> (Self, bool) {
         if rhs == 0 {
-            // Handle division by zero, returning zero and a boolean flag indicating overflow.
             (0, true)
         } else {
             self.overflowing_div(rhs)
@@ -1111,7 +1094,6 @@ impl FixedWidthInteger for i64 {
 
     fn remainder_reporting_overflow(&self, rhs: Self) -> (Self, bool) {
         if rhs == 0 {
-            // Handle division by zero for remainder, returning zero and a boolean flag indicating overflow.
             (0, true)
         } else {
             self.overflowing_rem(rhs)
@@ -1161,7 +1143,6 @@ impl FixedWidthInteger for i128 {
 
     fn divided_reporting_overflow(&self, rhs: Self) -> (Self, bool) {
         if rhs == 0 {
-            // Handle division by zero, returning zero and a boolean flag indicating overflow.
             (0, true)
         } else {
             self.overflowing_div(rhs)
@@ -1174,7 +1155,6 @@ impl FixedWidthInteger for i128 {
 
     fn remainder_reporting_overflow(&self, rhs: Self) -> (Self, bool) {
         if rhs == 0 {
-            // Handle division by zero for remainder, returning zero and a boolean flag indicating overflow.
             (0, true)
         } else {
             self.overflowing_rem(rhs)
@@ -1221,7 +1201,19 @@ impl UnsignedInteger for u128 {}
 pub trait FloatingPoint: SignedNumeric {
     type Exponent: SignedInteger;
 
-    fn exponent(&self) -> Self::Exponent;
+    #[must_use]
+    fn ceil(self) -> Self;
+
+    #[must_use]
+    fn floor(self) -> Self;
+
+    #[must_use]
+    fn fract(self) -> Self;
+
+    #[must_use]
+    fn trunc(self) -> Self;
+
+    fn exponent(self) -> Self::Exponent;
 
     fn floating_point_class(&self) -> FloatingPointClassification;
 
@@ -1242,22 +1234,23 @@ pub trait FloatingPoint: SignedNumeric {
     fn is_zero(&self) -> bool;
 
     #[must_use]
-    fn next_down(&self) -> Self;
+    fn next_down(self) -> Self;
 
     #[must_use]
-    fn next_up(&self) -> Self;
+    fn next_up(self) -> Self;
 
     fn sign(&self) -> FloatingPointSign;
 
     #[must_use]
-    fn significand(&self) -> Self;
+    fn significand(self) -> Self;
 
     #[must_use]
-    fn ulp(&self) -> Self;
+    fn ulp(self) -> Self;
 
     fn add_product(&mut self, lhs: Self, rhs: Self);
 
-    fn adding_product(lhs: Self, rhs: Self) -> Self;
+    #[must_use]
+    fn adding_product(self, lhs: Self, rhs: Self) -> Self;
 
     fn form_remainder(&mut self, other: Self);
 
@@ -1274,23 +1267,23 @@ pub trait FloatingPoint: SignedNumeric {
     fn is_totally_ordered_below_or_equal_to(&self, other: Self) -> bool;
 
     #[must_use]
-    fn remainder(&self, other: Self) -> Self;
+    fn remainder(self, other: Self) -> Self;
 
     fn round(&mut self);
 
     fn round_with(&mut self, rule: FloatingPointRoundingRule);
 
     #[must_use]
-    fn rounded(&self) -> Self;
+    fn rounded(self) -> Self;
 
     #[must_use]
-    fn rounded_with(&self, rule: FloatingPointRoundingRule) -> Self;
+    fn rounded_with(self, rule: FloatingPointRoundingRule) -> Self;
 
     #[must_use]
-    fn square_root(&self) -> Self;
+    fn square_root(self) -> Self;
 
     #[must_use]
-    fn truncating_remainder(&self, other: Self) -> Self;
+    fn truncating_remainder(self, other: Self) -> Self;
 
     fn greatest_finite_magnitude() -> Self;
 
@@ -1322,8 +1315,59 @@ pub trait FloatingPoint: SignedNumeric {
 impl FloatingPoint for f32 {
     type Exponent = i32;
 
+    fn ceil(self) -> Self {
+        if self.is_nan() {
+            return self;
+        }
+
+        if self.is_infinite() {
+            return self;
+        }
+
+        if self >= 0.0 {
+            return (self as Self::Exponent) as Self
+                + if self == (self as Self::Exponent) as Self {
+                    0.0
+                } else {
+                    1.0
+                };
+        }
+
+        let truncated = (self as Self::Exponent) as Self;
+        return truncated;
+    }
+
+    fn floor(self) -> Self {
+        if self.is_nan() {
+            return self;
+        }
+
+        if self.is_infinite() {
+            return self;
+        }
+
+        if self >= 0.0 {
+            return (self as Self::Exponent) as Self;
+        }
+
+        let truncated = (self as Self::Exponent) as Self;
+        if self == truncated {
+            return truncated;
+        }
+
+        truncated - 1.0
+    }
+
+    fn fract(self) -> Self {
+        self - self.floor()
+    }
+
+    fn trunc(self) -> Self {
+        self - self.fract()
+    }
+
     #[allow(clippy::cast_possible_wrap)]
-    fn exponent(&self) -> Self::Exponent {
+    fn exponent(self) -> Self::Exponent {
         self.to_bits() as i32 >> 23 & 0xFF
     }
 
@@ -1364,7 +1408,7 @@ impl FloatingPoint for f32 {
     }
 
     fn is_canonical(&self) -> bool {
-        !self.is_nan() // For simplicity, we consider NaNs non-canonical
+        !self.is_nan()
     }
 
     fn is_finite(&self) -> bool {
@@ -1384,7 +1428,7 @@ impl FloatingPoint for f32 {
     }
 
     fn is_signaling_nan(&self) -> bool {
-        false // No signaling NaNs in the f32 type
+        false
     }
 
     fn is_subnormal(&self) -> bool {
@@ -1395,18 +1439,18 @@ impl FloatingPoint for f32 {
         *self == 0.0
     }
 
-    fn next_down(&self) -> Self {
+    fn next_down(self) -> Self {
         let mut bits = self.to_bits();
 
         if self.is_nan() {
-            return *self; // NaN can't go next down.
+            return self;
         } else if self.is_infinite() {
             return if self.is_sign_negative() {
                 Self::NEG_INFINITY
             } else {
                 Self::INFINITY
             };
-        } else if *self == 0.0 {
+        } else if self == 0.0 {
             return if self.is_sign_negative() {
                 -Self::ZERO
             } else {
@@ -1414,34 +1458,27 @@ impl FloatingPoint for f32 {
             };
         }
 
-        // For non-zero numbers, manipulate the raw bits.
         if self.is_sign_negative() {
-            // Negative number: increment the bit representation.
             bits += 1;
         } else {
-            // Positive number: decrement the bit representation.
             bits -= 1;
         }
 
-        // Convert the bits back into an f32.
         Self::from_bits(bits)
     }
 
-    fn next_up(&self) -> Self {
-        // Convert the f32 to raw bits.
+    fn next_up(self) -> Self {
         let mut bits = self.to_bits();
 
-        // If the number is positive, we add 1 (move up).
-        // If the number is negative, we subtract 1 (move up in the negative direction).
         if self.is_nan() {
-            return *self; // NaN can't go next up.
+            return self;
         } else if self.is_infinite() {
             return if self.is_sign_negative() {
                 Self::NEG_INFINITY
             } else {
                 Self::INFINITY
             };
-        } else if *self == 0.0 {
+        } else if self == 0.0 {
             return if self.is_sign_negative() {
                 -Self::ZERO
             } else {
@@ -1449,16 +1486,12 @@ impl FloatingPoint for f32 {
             };
         }
 
-        // For non-zero numbers, manipulate the raw bits.
         if self.is_sign_negative() {
-            // Negative number: decrement the bit representation.
             bits -= 1;
         } else {
-            // Positive number: increment the bit representation.
             bits += 1;
         }
 
-        // Convert the bits back into an f32.
         Self::from_bits(bits)
     }
 
@@ -1470,20 +1503,34 @@ impl FloatingPoint for f32 {
         }
     }
 
-    fn significand(&self) -> Self {
-        self.fract()
+    fn significand(self) -> Self {
+        if self == 0.0 {
+            return 0.0;
+        }
+
+        let raw_bits = self.to_bits();
+        let exponent = (raw_bits >> 23) & 0xFF;
+        let significand = raw_bits & 0x007F_FFFF;
+
+        if exponent == 0 {
+            return Self::from_bits(significand);
+        }
+
+        let normalized_significand = (1u32 << 23) | significand;
+
+        Self::from_bits(normalized_significand)
     }
 
-    fn ulp(&self) -> Self {
+    fn ulp(self) -> Self {
         Self::EPSILON
     }
 
     fn add_product(&mut self, lhs: Self, rhs: Self) {
-        *self = lhs * rhs;
+        *self += lhs * rhs;
     }
 
-    fn adding_product(lhs: Self, rhs: Self) -> Self {
-        lhs * rhs
+    fn adding_product(self, lhs: Self, rhs: Self) -> Self {
+        self + lhs * rhs
     }
 
     fn form_remainder(&mut self, other: Self) {
@@ -1491,7 +1538,7 @@ impl FloatingPoint for f32 {
     }
 
     fn form_square_root(&mut self) {
-        *self = self.sqrt();
+        *self = self.square_root();
     }
 
     fn form_truncating_remainder(&mut self, other: Self) {
@@ -1514,12 +1561,12 @@ impl FloatingPoint for f32 {
         self.is_finite() && other.is_finite()
     }
 
-    fn remainder(&self, other: Self) -> Self {
-        Self::rem(*self, other)
+    fn remainder(self, other: Self) -> Self {
+        Self::rem(self, other)
     }
 
     fn round(&mut self) {
-        *self = Self::round(*self);
+        *self = unsafe { self.to_int_unchecked::<u64>() } as Self;
     }
 
     fn round_with(&mut self, rule: FloatingPointRoundingRule) {
@@ -1536,18 +1583,17 @@ impl FloatingPoint for f32 {
             FloatingPointRoundingRule::Down => self.floor(),
             FloatingPointRoundingRule::ToNearestOrAwayFromZero => {
                 if self.is_nan() {
-                    *self // NaN remains unchanged
+                    *self
                 } else if (self.fract() - 0.5).abs() < 0.1 || (self.fract() - -0.5).abs() < 0.1 {
-                    // Handle halfway cases by rounding away from zero
                     if *self > 0.0 {
-                        self.ceil() // Round up for positive numbers
+                        self.ceil()
                     } else if *self < 0.0 {
-                        self.floor() // Round down for negative numbers
+                        self.floor()
                     } else {
-                        *self // No change for zero
+                        *self
                     }
                 } else {
-                    self.rounded() // Standard rounding
+                    self.rounded()
                 }
             }
             FloatingPointRoundingRule::ToNearestOrEven => {
@@ -1562,41 +1608,40 @@ impl FloatingPoint for f32 {
         };
     }
 
-    fn rounded(&self) -> Self {
-        self.round()
+    fn rounded(self) -> Self {
+        unsafe { self.to_int_unchecked::<u64>() as Self }
     }
 
-    fn rounded_with(&self, rule: FloatingPointRoundingRule) -> Self {
+    fn rounded_with(self, rule: FloatingPointRoundingRule) -> Self {
         match rule {
             FloatingPointRoundingRule::AwayFromZero => {
-                if *self > 0.0 {
+                if self > 0.0 {
                     self.ceil()
-                } else if *self < 0.0 {
+                } else if self < 0.0 {
                     self.floor()
                 } else {
-                    *self
+                    self
                 }
             }
             FloatingPointRoundingRule::Down => self.floor(),
             FloatingPointRoundingRule::ToNearestOrAwayFromZero => {
                 if self.is_nan() {
-                    *self // NaN remains unchanged
+                    self
                 } else if (self.fract() - 0.5).abs() < 0.1 || (self.fract() - 0.5).abs() < 0.1 {
-                    // Handle halfway cases by rounding away from zero
-                    if *self > 0.0 {
-                        self.ceil() // Round up for positive numbers
-                    } else if *self < 0.0 {
-                        self.floor() // Round down for negative numbers
+                    if self > 0.0 {
+                        self.ceil()
+                    } else if self < 0.0 {
+                        self.floor()
                     } else {
-                        *self // No change for zero
+                        self
                     }
                 } else {
-                    self.rounded() // Standard rounding
+                    self.rounded()
                 }
             }
             FloatingPointRoundingRule::ToNearestOrEven => {
                 if self.is_nan() {
-                    *self
+                    self
                 } else {
                     self.rounded()
                 }
@@ -1606,11 +1651,29 @@ impl FloatingPoint for f32 {
         }
     }
 
-    fn square_root(&self) -> Self {
-        self.sqrt()
+    fn square_root(self) -> Self {
+        if self < 0.0 {
+            return Self::NAN;
+        }
+
+        if self == 0.0 {
+            return 0.0;
+        }
+
+        let mut guess = self / 2.0;
+        let mut last_guess = 0.0;
+
+        let tolerance = 1e-6;
+
+        while (guess - last_guess).abs() > tolerance {
+            last_guess = guess;
+            guess = (guess + self / guess) / 2.0;
+        }
+
+        guess
     }
 
-    fn truncating_remainder(&self, other: Self) -> Self {
+    fn truncating_remainder(self, other: Self) -> Self {
         let truncated_quotient = (self / other).trunc();
         self - (other * truncated_quotient)
     }
@@ -1636,7 +1699,7 @@ impl FloatingPoint for f32 {
     }
 
     fn pi() -> Self {
-        std::f32::consts::PI
+        core::f32::consts::PI
     }
 
     fn radix() -> Self {
@@ -1671,8 +1734,58 @@ impl FloatingPoint for f32 {
 impl FloatingPoint for f64 {
     type Exponent = i64;
 
+    fn ceil(self) -> Self {
+        if self.is_nan() {
+            return self;
+        }
+
+        if self.is_infinite() {
+            return self;
+        }
+
+        if self >= 0.0 {
+            return (self as Self::Exponent) as Self
+                + if self == (self as Self::Exponent) as Self {
+                    0.0
+                } else {
+                    1.0
+                };
+        }
+
+        (self as Self::Exponent) as Self
+    }
+
+    fn floor(self) -> Self {
+        if self.is_nan() {
+            return self;
+        }
+
+        if self.is_infinite() {
+            return self;
+        }
+
+        if self >= 0.0 {
+            return (self as Self::Exponent) as Self;
+        }
+
+        let truncated = (self as Self::Exponent) as Self;
+        if self == truncated {
+            return truncated;
+        }
+
+        truncated - 1.0
+    }
+
+    fn fract(self) -> Self {
+        self - self.floor()
+    }
+
+    fn trunc(self) -> Self {
+        self - self.fract()
+    }
+
     #[allow(clippy::cast_possible_wrap)]
-    fn exponent(&self) -> Self::Exponent {
+    fn exponent(self) -> Self::Exponent {
         self.to_bits() as Self::Exponent >> 23 & 0xFF
     }
 
@@ -1713,7 +1826,7 @@ impl FloatingPoint for f64 {
     }
 
     fn is_canonical(&self) -> bool {
-        !self.is_nan() // For simplicity, we consider NaNs non-canonical
+        !self.is_nan()
     }
 
     fn is_finite(&self) -> bool {
@@ -1733,7 +1846,7 @@ impl FloatingPoint for f64 {
     }
 
     fn is_signaling_nan(&self) -> bool {
-        false // No signaling NaNs in the f32 type
+        false
     }
 
     fn is_subnormal(&self) -> bool {
@@ -1744,18 +1857,18 @@ impl FloatingPoint for f64 {
         *self == 0.0
     }
 
-    fn next_down(&self) -> Self {
+    fn next_down(self) -> Self {
         let mut bits = self.to_bits();
 
         if self.is_nan() {
-            return *self; // NaN can't go next down.
+            return self;
         } else if self.is_infinite() {
             return if self.is_sign_negative() {
                 Self::NEG_INFINITY
             } else {
                 Self::INFINITY
             };
-        } else if *self == 0.0 {
+        } else if self == 0.0 {
             return if self.is_sign_negative() {
                 -Self::ZERO
             } else {
@@ -1776,21 +1889,21 @@ impl FloatingPoint for f64 {
         Self::from_bits(bits)
     }
 
-    fn next_up(&self) -> Self {
+    fn next_up(self) -> Self {
         // Convert the f32 to raw bits.
         let mut bits = self.to_bits();
 
         // If the number is positive, we add 1 (move up).
         // If the number is negative, we subtract 1 (move up in the negative direction).
         if self.is_nan() {
-            return *self; // NaN can't go next up.
+            return self; // NaN can't go next up.
         } else if self.is_infinite() {
             return if self.is_sign_negative() {
                 Self::NEG_INFINITY
             } else {
                 Self::INFINITY
             };
-        } else if *self == 0.0 {
+        } else if self == 0.0 {
             return if self.is_sign_negative() {
                 -Self::ZERO
             } else {
@@ -1819,11 +1932,11 @@ impl FloatingPoint for f64 {
         }
     }
 
-    fn significand(&self) -> Self {
+    fn significand(self) -> Self {
         self.fract()
     }
 
-    fn ulp(&self) -> Self {
+    fn ulp(self) -> Self {
         Self::EPSILON
     }
 
@@ -1831,7 +1944,7 @@ impl FloatingPoint for f64 {
         *self = lhs * rhs;
     }
 
-    fn adding_product(lhs: Self, rhs: Self) -> Self {
+    fn adding_product(self, lhs: Self, rhs: Self) -> Self {
         lhs * rhs
     }
 
@@ -1840,7 +1953,7 @@ impl FloatingPoint for f64 {
     }
 
     fn form_square_root(&mut self) {
-        *self = self.sqrt();
+        *self = self.square_root();
     }
 
     fn form_truncating_remainder(&mut self, other: Self) {
@@ -1863,12 +1976,12 @@ impl FloatingPoint for f64 {
         self.is_finite() && other.is_finite()
     }
 
-    fn remainder(&self, other: Self) -> Self {
-        Self::rem(*self, other)
+    fn remainder(self, other: Self) -> Self {
+        Self::rem(self, other)
     }
 
     fn round(&mut self) {
-        *self = Self::round(*self);
+        *self = Self::rounded(*self);
     }
 
     fn round_with(&mut self, rule: FloatingPointRoundingRule) {
@@ -1911,33 +2024,33 @@ impl FloatingPoint for f64 {
         };
     }
 
-    fn rounded(&self) -> Self {
-        self.round()
+    fn rounded(self) -> Self {
+        unsafe { self.to_int_unchecked::<u64>() as Self }
     }
 
-    fn rounded_with(&self, rule: FloatingPointRoundingRule) -> Self {
+    fn rounded_with(self, rule: FloatingPointRoundingRule) -> Self {
         match rule {
             FloatingPointRoundingRule::AwayFromZero => {
-                if *self > 0.0 {
+                if self > 0.0 {
                     self.ceil()
-                } else if *self < 0.0 {
+                } else if self < 0.0 {
                     self.floor()
                 } else {
-                    *self
+                    self
                 }
             }
             FloatingPointRoundingRule::Down => self.floor(),
             FloatingPointRoundingRule::ToNearestOrAwayFromZero => {
                 if self.is_nan() {
-                    *self // NaN remains unchanged
+                    self // NaN remains unchanged
                 } else if (self.fract() - 0.5).abs() < 0.1 || (self.fract() - 0.5).abs() < 0.1 {
                     // Handle halfway cases by rounding away from zero
-                    if *self > 0.0 {
+                    if self > 0.0 {
                         self.ceil() // Round up for positive numbers
-                    } else if *self < 0.0 {
+                    } else if self < 0.0 {
                         self.floor() // Round down for negative numbers
                     } else {
-                        *self // No change for zero
+                        self // No change for zero
                     }
                 } else {
                     self.rounded() // Standard rounding
@@ -1945,7 +2058,7 @@ impl FloatingPoint for f64 {
             }
             FloatingPointRoundingRule::ToNearestOrEven => {
                 if self.is_nan() {
-                    *self
+                    self
                 } else {
                     self.rounded()
                 }
@@ -1955,11 +2068,26 @@ impl FloatingPoint for f64 {
         }
     }
 
-    fn square_root(&self) -> Self {
-        self.sqrt()
+    fn square_root(self) -> Self {
+        if self < 0.0 {
+            return Self::NAN;
+        }
+        if self == 0.0 {
+            return 0.0;
+        }
+
+        let mut guess = self / 2.0;
+        let mut last_guess = 0.0;
+
+        while (guess - last_guess).abs() > 0.0001 {
+            last_guess = guess;
+            guess = (guess + self / guess) / 2.0;
+        }
+
+        guess
     }
 
-    fn truncating_remainder(&self, other: Self) -> Self {
+    fn truncating_remainder(self, other: Self) -> Self {
         let truncated_quotient = (self / other).trunc();
         self - (other * truncated_quotient)
     }
