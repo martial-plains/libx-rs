@@ -1,5 +1,5 @@
 #![no_std]
-#![feature(cfg_match, const_trait_impl, decl_macro)]
+#![feature(cfg_match, const_trait_impl, decl_macro, portable_simd)]
 #![warn(
     clippy::pedantic,
     clippy::nursery,
@@ -14,5 +14,3 @@ pub mod ciphers;
 pub mod collections;
 pub mod formatting;
 pub mod num;
-
-pub(crate) mod utils;
