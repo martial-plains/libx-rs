@@ -211,17 +211,17 @@ impl Number {
 impl fmt::Display for Number {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Number::Bool(value) => write!(f, "{value}"),
-            Number::Int(value) => write!(f, "{value}"),
-            Number::Int8(value) => write!(f, "{value}"),
-            Number::Int16(value) => write!(f, "{value}"),
-            Number::Int32(value) => write!(f, "{value}"),
-            Number::UInt(value) => write!(f, "{value}"),
-            Number::UInt8(value) => write!(f, "{value}"),
-            Number::UInt16(value) => write!(f, "{value}"),
-            Number::UInt32(value) => write!(f, "{value}"),
-            Number::Float(value) => write!(f, "{value}"),
-            Number::Double(value) => write!(f, "{value}"),
+            Self::Bool(value) => write!(f, "{value}"),
+            Self::Int(value) => write!(f, "{value}"),
+            Self::Int8(value) => write!(f, "{value}"),
+            Self::Int16(value) => write!(f, "{value}"),
+            Self::Int32(value) => write!(f, "{value}"),
+            Self::UInt(value) => write!(f, "{value}"),
+            Self::UInt8(value) => write!(f, "{value}"),
+            Self::UInt16(value) => write!(f, "{value}"),
+            Self::UInt32(value) => write!(f, "{value}"),
+            Self::Float(value) => write!(f, "{value}"),
+            Self::Double(value) => write!(f, "{value}"),
         }
     }
 }
