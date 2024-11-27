@@ -2,8 +2,8 @@ use core::{
     hash::Hash,
     mem,
     ops::{
-        Add, AddAssign, BitOr, BitOrAssign, BitXor, Mul, MulAssign, Neg, Rem, RemAssign, Shl,
-        ShlAssign, Shr, ShrAssign, Sub, SubAssign,
+        Add, AddAssign, BitOr, BitOrAssign, BitXor, Div, DivAssign, Mul, MulAssign, Neg, Rem,
+        RemAssign, Shl, ShlAssign, Shr, ShrAssign, Sub, SubAssign,
     },
 };
 
@@ -37,7 +37,13 @@ use core::{
 /// println!("Sum: {}", total); // Output: Sum: 16.5
 /// ```
 pub trait AdditiveArithmetic:
-    Sized + Add<Output = Self> + AddAssign + Sub<Output = Self> + SubAssign
+    Sized
+    + Add<Output = Self>
+    + AddAssign
+    + Sub<Output = Self>
+    + SubAssign
+    + PartialEq
+    + PartialOrd<Self>
 {
     /// The additive identity for the type (e.g., `0` for integers or floats).
     const ZERO: Self;
@@ -152,7 +158,7 @@ impl AdditiveArithmetic for f64 {
 /// let doubled_integers: Vec<i32> = doubling_all(&integers.collect::<Vec<_>>());
 /// assert_eq!(doubled_integers, vec![0, 2, 4, 6, 8, 10, 12, 14]);
 /// ```
-pub trait Numeric: AdditiveArithmetic + Mul + MulAssign {}
+pub trait Numeric: AdditiveArithmetic + Mul + MulAssign + Copy {}
 
 impl Numeric for i8 {}
 
@@ -197,57 +203,31 @@ impl Numeric for f64 {}
 /// When negating a value leads to an unrepresentable result (e.g., overflow or underflow),
 /// the operation should handle the error according to the type's design. For instance, in Rust,
 /// negating `i32::MIN` will cause an overflow and potentially panic.
-pub trait SignedNumeric: Numeric + Neg {
+pub trait SignedNumeric: Numeric + Neg<Output = Self> {
     /// Negates the current value, setting it to its additive inverse.
     ///
     /// This method should mutate the value to represent its additive inverse.
     /// It is expected that negating a value that is at the edge of its type's representable
     /// range (e.g., `i32::MIN`) will either panic or return an exceptional result, depending on
     /// how the `SignedNumeric` trait is implemented for the type.
-    fn negate(&mut self);
-}
-
-impl SignedNumeric for i8 {
     fn negate(&mut self) {
         *self = self.neg();
     }
 }
 
-impl SignedNumeric for i16 {
-    fn negate(&mut self) {
-        *self = self.neg();
-    }
-}
+impl SignedNumeric for i8 {}
 
-impl SignedNumeric for i32 {
-    fn negate(&mut self) {
-        *self = self.neg();
-    }
-}
+impl SignedNumeric for i16 {}
 
-impl SignedNumeric for i64 {
-    fn negate(&mut self) {
-        *self = self.neg();
-    }
-}
+impl SignedNumeric for i32 {}
 
-impl SignedNumeric for i128 {
-    fn negate(&mut self) {
-        *self = self.neg();
-    }
-}
+impl SignedNumeric for i64 {}
 
-impl SignedNumeric for f32 {
-    fn negate(&mut self) {
-        *self = self.neg();
-    }
-}
+impl SignedNumeric for i128 {}
 
-impl SignedNumeric for f64 {
-    fn negate(&mut self) {
-        *self = self.neg();
-    }
-}
+impl SignedNumeric for f32 {}
+
+impl SignedNumeric for f64 {}
 
 /// A trait representing binary integer types.
 ///
@@ -274,7 +254,19 @@ impl SignedNumeric for f64 {
 /// assert_eq!(x.bit_width(), 32);
 /// ```
 pub trait BinaryInteger:
-    Hash + Numeric + Rem + BitXor + BitOr + RemAssign + BitOrAssign + Shl + Shr + ShlAssign + ShrAssign
+    Hash
+    + Numeric
+    + Div<Output = Self>
+    + DivAssign
+    + Rem<Output = Self>
+    + BitXor
+    + BitOr
+    + RemAssign
+    + BitOrAssign
+    + Shl
+    + Shr
+    + ShlAssign
+    + ShrAssign
 {
     /// Returns the quotient and remainder when dividing this integer by `rhs`.
     ///
@@ -295,7 +287,9 @@ pub trait BinaryInteger:
     /// let y: i32 = 3;
     /// assert_eq!(x.quotient_and_remainder_dividing_by(y), (3, 1));
     /// ```
-    fn quotient_and_remainder_dividing_by(&self, rhs: Self) -> (Self, Self);
+    fn quotient_and_remainder_dividing_by(self, rhs: Self) -> (Self, Self) {
+        (self / rhs, self % rhs)
+    }
 
     /// Returns `true` if this value is a multiple of `other`, otherwise returns `false`.
     ///
@@ -318,7 +312,13 @@ pub trait BinaryInteger:
     /// let z: i32 = 7;
     /// assert!(!z.is_multiple_of(y));
     /// ```
-    fn is_multiple_of(&self, other: Self) -> bool;
+    fn is_multiple_of(self, other: Self) -> bool {
+        if other == Self::ZERO {
+            return false;
+        }
+
+        self % other == Self::ZERO
+    }
 
     /// Returns the sign of the integer.
     ///
@@ -344,7 +344,7 @@ pub trait BinaryInteger:
     /// assert_eq!(z.signum(), 0);
     /// ```
     #[must_use]
-    fn signum(&self) -> Self;
+    fn signum(self) -> Self;
 
     /// Returns whether this type is a signed integer type.
     ///
@@ -382,7 +382,9 @@ pub trait BinaryInteger:
     /// let y: u64 = 1000;
     /// assert_eq!(y.bit_width(), 64);
     /// ```
-    fn bit_width(&self) -> usize;
+    fn bit_width(&self) -> usize {
+        mem::size_of::<Self>() * 8
+    }
 
     /// Returns the number of trailing zero bits in the binary representation of this integer.
     ///
@@ -406,28 +408,12 @@ pub trait BinaryInteger:
 }
 
 impl BinaryInteger for u8 {
-    fn quotient_and_remainder_dividing_by(&self, rhs: Self) -> (Self, Self) {
-        (self / rhs, self % rhs)
-    }
-
-    fn is_multiple_of(&self, other: Self) -> bool {
-        if other == Self::ZERO {
-            return false;
-        }
-
-        self % other == Self::ZERO
-    }
-
-    fn signum(&self) -> Self {
-        Self::from(*self > 0)
+    fn signum(self) -> Self {
+        Self::from(self > 0)
     }
 
     fn is_signed() -> bool {
         false
-    }
-
-    fn bit_width(&self) -> usize {
-        mem::size_of::<Self>() * 8
     }
 
     fn trailing_zero_bit_count(&self) -> usize {
@@ -436,28 +422,12 @@ impl BinaryInteger for u8 {
 }
 
 impl BinaryInteger for u16 {
-    fn quotient_and_remainder_dividing_by(&self, rhs: Self) -> (Self, Self) {
-        (self / rhs, self % rhs)
-    }
-
-    fn is_multiple_of(&self, other: Self) -> bool {
-        if other == Self::ZERO {
-            return false;
-        }
-
-        self % other == Self::ZERO
-    }
-
-    fn signum(&self) -> Self {
-        Self::from(*self > 0)
+    fn signum(self) -> Self {
+        Self::from(self > 0)
     }
 
     fn is_signed() -> bool {
         false
-    }
-
-    fn bit_width(&self) -> usize {
-        mem::size_of::<Self>() * 8
     }
 
     fn trailing_zero_bit_count(&self) -> usize {
@@ -466,28 +436,12 @@ impl BinaryInteger for u16 {
 }
 
 impl BinaryInteger for u32 {
-    fn quotient_and_remainder_dividing_by(&self, rhs: Self) -> (Self, Self) {
-        (self / rhs, self % rhs)
-    }
-
-    fn is_multiple_of(&self, other: Self) -> bool {
-        if other == Self::ZERO {
-            return false;
-        }
-
-        self % other == Self::ZERO
-    }
-
-    fn signum(&self) -> Self {
-        Self::from(*self > 0)
+    fn signum(self) -> Self {
+        Self::from(self > 0)
     }
 
     fn is_signed() -> bool {
         false
-    }
-
-    fn bit_width(&self) -> usize {
-        mem::size_of::<Self>() * 8
     }
 
     fn trailing_zero_bit_count(&self) -> usize {
@@ -496,28 +450,12 @@ impl BinaryInteger for u32 {
 }
 
 impl BinaryInteger for u64 {
-    fn quotient_and_remainder_dividing_by(&self, rhs: Self) -> (Self, Self) {
-        (self / rhs, self % rhs)
-    }
-
-    fn is_multiple_of(&self, other: Self) -> bool {
-        if other == Self::ZERO {
-            return false;
-        }
-
-        self % other == Self::ZERO
-    }
-
-    fn signum(&self) -> Self {
-        Self::from(*self > 0)
+    fn signum(self) -> Self {
+        Self::from(self > 0)
     }
 
     fn is_signed() -> bool {
         false
-    }
-
-    fn bit_width(&self) -> usize {
-        mem::size_of::<Self>() * 8
     }
 
     fn trailing_zero_bit_count(&self) -> usize {
@@ -526,28 +464,12 @@ impl BinaryInteger for u64 {
 }
 
 impl BinaryInteger for u128 {
-    fn quotient_and_remainder_dividing_by(&self, rhs: Self) -> (Self, Self) {
-        (self / rhs, self % rhs)
-    }
-
-    fn is_multiple_of(&self, other: Self) -> bool {
-        if other == Self::ZERO {
-            return false;
-        }
-
-        self % other == Self::ZERO
-    }
-
-    fn signum(&self) -> Self {
-        Self::from(*self > 0)
+    fn signum(self) -> Self {
+        Self::from(self > 0)
     }
 
     fn is_signed() -> bool {
         false
-    }
-
-    fn bit_width(&self) -> usize {
-        mem::size_of::<Self>() * 8
     }
 
     fn trailing_zero_bit_count(&self) -> usize {
@@ -556,32 +478,16 @@ impl BinaryInteger for u128 {
 }
 
 impl BinaryInteger for i8 {
-    fn quotient_and_remainder_dividing_by(&self, rhs: Self) -> (Self, Self) {
-        (self / rhs, self % rhs)
-    }
-
-    fn is_multiple_of(&self, other: Self) -> bool {
-        if other == Self::ZERO {
-            return false;
-        }
-
-        self % other == Self::ZERO
-    }
-
-    fn signum(&self) -> Self {
-        if *self < 0 {
+    fn signum(self) -> Self {
+        if self < 0 {
             -1
         } else {
-            Self::from(*self > 0)
+            Self::from(self > 0)
         }
     }
 
     fn is_signed() -> bool {
         true
-    }
-
-    fn bit_width(&self) -> usize {
-        mem::size_of::<Self>() * 8
     }
 
     fn trailing_zero_bit_count(&self) -> usize {
@@ -590,32 +496,16 @@ impl BinaryInteger for i8 {
 }
 
 impl BinaryInteger for i16 {
-    fn quotient_and_remainder_dividing_by(&self, rhs: Self) -> (Self, Self) {
-        (self / rhs, self % rhs)
-    }
-
-    fn is_multiple_of(&self, other: Self) -> bool {
-        if other == Self::ZERO {
-            return false;
-        }
-
-        self % other == Self::ZERO
-    }
-
-    fn signum(&self) -> Self {
-        if *self < 0 {
+    fn signum(self) -> Self {
+        if self < 0 {
             -1
         } else {
-            Self::from(*self > 0)
+            Self::from(self > 0)
         }
     }
 
     fn is_signed() -> bool {
         true
-    }
-
-    fn bit_width(&self) -> usize {
-        mem::size_of::<Self>() * 8
     }
 
     fn trailing_zero_bit_count(&self) -> usize {
@@ -624,32 +514,16 @@ impl BinaryInteger for i16 {
 }
 
 impl BinaryInteger for i32 {
-    fn quotient_and_remainder_dividing_by(&self, rhs: Self) -> (Self, Self) {
-        (self / rhs, self % rhs)
-    }
-
-    fn is_multiple_of(&self, other: Self) -> bool {
-        if other == Self::ZERO {
-            return false;
-        }
-
-        self % other == Self::ZERO
-    }
-
-    fn signum(&self) -> Self {
-        if *self < 0 {
+    fn signum(self) -> Self {
+        if self < 0 {
             -1
         } else {
-            Self::from(*self > 0)
+            Self::from(self > 0)
         }
     }
 
     fn is_signed() -> bool {
         true
-    }
-
-    fn bit_width(&self) -> usize {
-        mem::size_of::<Self>() * 8
     }
 
     fn trailing_zero_bit_count(&self) -> usize {
@@ -658,32 +532,16 @@ impl BinaryInteger for i32 {
 }
 
 impl BinaryInteger for i64 {
-    fn quotient_and_remainder_dividing_by(&self, rhs: Self) -> (Self, Self) {
-        (self / rhs, self % rhs)
-    }
-
-    fn is_multiple_of(&self, other: Self) -> bool {
-        if other == Self::ZERO {
-            return false;
-        }
-
-        self % other == Self::ZERO
-    }
-
-    fn signum(&self) -> Self {
-        if *self < 0 {
+    fn signum(self) -> Self {
+        if self < 0 {
             -1
         } else {
-            Self::from(*self > 0)
+            Self::from(self > 0)
         }
     }
 
     fn is_signed() -> bool {
         true
-    }
-
-    fn bit_width(&self) -> usize {
-        mem::size_of::<Self>() * 8
     }
 
     fn trailing_zero_bit_count(&self) -> usize {
@@ -692,32 +550,16 @@ impl BinaryInteger for i64 {
 }
 
 impl BinaryInteger for i128 {
-    fn quotient_and_remainder_dividing_by(&self, rhs: Self) -> (Self, Self) {
-        (self / rhs, self % rhs)
-    }
-
-    fn is_multiple_of(&self, other: Self) -> bool {
-        if other == Self::ZERO {
-            return false;
-        }
-
-        self % other == Self::ZERO
-    }
-
-    fn signum(&self) -> Self {
-        if *self < 0 {
+    fn signum(self) -> Self {
+        if self < 0 {
             -1
         } else {
-            Self::from(*self > 0)
+            Self::from(self > 0)
         }
     }
 
     fn is_signed() -> bool {
         true
-    }
-
-    fn bit_width(&self) -> usize {
-        mem::size_of::<Self>() * 8
     }
 
     fn trailing_zero_bit_count(&self) -> usize {
@@ -2142,7 +1984,25 @@ impl FloatingPoint for f32 {
     }
 
     fn ulp(self) -> Self {
-        Self::EPSILON
+        let bits = self.to_bits();
+
+        if self.is_nan() || self.is_infinite() {
+            return self;
+        }
+
+        let mut next_bits = bits;
+
+        if self == 0.0 {
+            next_bits = 1;
+        } else if self > 0.0 {
+            next_bits += 1;
+        } else {
+            next_bits = bits.wrapping_add(1);
+        }
+
+        let next_value = Self::from_bits(next_bits);
+
+        (next_value - self).abs()
     }
 
     fn add_product(&mut self, lhs: Self, rhs: Self) {
@@ -2571,7 +2431,25 @@ impl FloatingPoint for f64 {
     }
 
     fn ulp(self) -> Self {
-        Self::EPSILON
+        let bits = self.to_bits();
+
+        if self.is_nan() || self.is_infinite() {
+            return self;
+        }
+
+        let mut next_bits = bits;
+
+        if self == 0.0 {
+            next_bits = 1;
+        } else if self > 0.0 {
+            next_bits += 1;
+        } else {
+            next_bits = bits.wrapping_add(1);
+        }
+
+        let next_value = Self::from_bits(next_bits);
+
+        (next_value - self).abs()
     }
 
     fn add_product(&mut self, lhs: Self, rhs: Self) {
@@ -2865,4 +2743,175 @@ pub enum FloatingPointRoundingRule {
 
     /// Round to the closest allowed value that is greater than or equal to the source.
     Up,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_numeric_multiplication() {
+        // Multiplication and multiplication assignment
+        let a = 3;
+        let b = 4;
+
+        assert_eq!(a * b, 12); // a * b
+
+        let mut c = a;
+        c *= b; // a *= b
+        assert_eq!(c, 12);
+
+        // Testing with the multiplicative identity (ONE)
+        assert_eq!(a * i8::ONE, a);
+        assert_eq!(b * i8::ONE, b);
+    }
+
+    #[test]
+    fn test_numeric_operations_with_floats() {
+        // Test with floating-point numbers
+        let a = 3.5;
+        let b = 2.0;
+
+        assert_eq!(a * b, 7.0);
+        assert_eq!(a + b, 5.5);
+        assert_eq!(a - b, 1.5);
+    }
+
+    #[test]
+    fn test_numeric_operations_with_negatives() {
+        // Test numeric operations on signed integers
+        let a = -5;
+        let b = -10;
+
+        assert_eq!(a + b, -15);
+        assert_eq!(a - b, 5);
+        assert_eq!(a * b, 50);
+    }
+
+    #[test]
+    fn test_signed_numeric_negate() {
+        // Testing negation on different types
+        let mut value = 10;
+        value.negate();
+        assert_eq!(value, -10);
+
+        value = -20;
+        value.negate();
+        assert_eq!(value, 20);
+
+        let mut value = 3.5;
+        value.negate();
+        assert_eq!(value, -3.5);
+
+        value = -4.75;
+        value.negate();
+        assert_eq!(value, 4.75);
+    }
+
+    #[test]
+    #[should_panic = "attempt to negate with overflow"]
+    fn test_signed_numeric_overflow() {
+        let mut first = i8::MIN;
+        first.negate();
+
+        let mut second = i16::MIN;
+        second.negate();
+
+        let mut third = i32::MIN;
+        third.negate();
+
+        let mut fourth = i64::MIN;
+        fourth.negate();
+
+        let mut fifth = i128::MIN;
+        fifth.negate();
+    }
+
+    // Test ULP of a positive f32
+    #[test]
+    fn test_ulp_of_positive_float() {
+        let value: f32 = 1.0;
+        let ulp_value = value.ulp();
+        assert_eq!(
+            ulp_value,
+            f32::EPSILON,
+            "The ULP of 1.0 should be the same as f32::EPSILON"
+        );
+    }
+
+    // Test ULP of a negative f32
+    #[test]
+    fn test_ulp_of_negative_float() {
+        let value: f32 = -1.0;
+        let ulp_value = value.ulp();
+        assert_eq!(
+            ulp_value,
+            f32::ulp_of_one(),
+            "The ULP of -1.0 should be the same as f32::EPSILON"
+        );
+    }
+
+    // Test ULP of a very small f32 close to zero
+    #[test]
+    fn test_ulp_of_small_float() {
+        let value: f32 = 1.0e-10;
+        let ulp_value = value.ulp();
+        assert!(
+            ulp_value > 0.0,
+            "The ULP of a small number should be greater than zero"
+        );
+    }
+
+    // Test ULP of a very large f32
+    #[test]
+    fn test_ulp_of_large_float() {
+        let value: f32 = 1.0e10;
+        let ulp_value = value.ulp();
+        assert!(
+            ulp_value > 0.0,
+            "The ULP of a large number should be greater than zero"
+        );
+    }
+
+    // Test ULP of NaN
+    #[test]
+    fn test_ulp_of_nan() {
+        let value: f32 = f32::NAN;
+        let ulp_value = value.ulp();
+        assert!(ulp_value.is_nan(), "The ULP of NaN should be NaN");
+    }
+
+    // Test ULP of Infinity
+    #[test]
+    fn test_ulp_of_infinity() {
+        let value: f32 = f32::INFINITY;
+        let ulp_value = value.ulp();
+        assert!(
+            ulp_value > 0.0,
+            "The ULP of a very large number should be greater than zero"
+        );
+    }
+
+    // Test ULP of a double precision float
+    #[test]
+    fn test_ulp_of_double() {
+        let value: f64 = 1.0;
+        let ulp_value = value.ulp();
+        assert_eq!(
+            ulp_value,
+            f64::ulp_of_one(),
+            "The ULP of 1.0 should be the same as f64::EPSILON"
+        );
+    }
+
+    // Test ULP of a very small f64
+    #[test]
+    fn test_ulp_of_small_double() {
+        let value: f64 = 1.0e-10;
+        let ulp_value = value.ulp();
+        assert!(
+            ulp_value > 0.0,
+            "The ULP of a small number should be greater than zero"
+        );
+    }
 }
