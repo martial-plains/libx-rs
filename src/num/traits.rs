@@ -52,6 +52,12 @@ pub trait AdditiveArithmetic:
     const ONE: Self;
 }
 
+impl AdditiveArithmetic for isize {
+    const ZERO: Self = 0;
+
+    const ONE: Self = 1;
+}
+
 impl AdditiveArithmetic for i8 {
     const ZERO: Self = 0;
 
@@ -77,6 +83,12 @@ impl AdditiveArithmetic for i64 {
 }
 
 impl AdditiveArithmetic for i128 {
+    const ZERO: Self = 0;
+
+    const ONE: Self = 1;
+}
+
+impl AdditiveArithmetic for usize {
     const ZERO: Self = 0;
 
     const ONE: Self = 1;
