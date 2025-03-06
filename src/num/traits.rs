@@ -693,12 +693,10 @@ pub trait FixedWidthInteger: BinaryInteger {
 }
 
 impl FixedWidthInteger for u8 {
-    #[must_use]
     fn big_endian(&self) -> Self {
         self.to_be()
     }
 
-    #[must_use]
     fn byte_swapped(&self) -> Self {
         self.swap_bytes()
     }
@@ -707,7 +705,6 @@ impl FixedWidthInteger for u8 {
         self.leading_zeros() as usize
     }
 
-    #[must_use]
     fn little_endian(&self) -> Self {
         self.to_le()
     }
@@ -754,12 +751,10 @@ impl FixedWidthInteger for u8 {
 }
 
 impl FixedWidthInteger for u16 {
-    #[must_use]
     fn big_endian(&self) -> Self {
         self.to_be()
     }
 
-    #[must_use]
     fn byte_swapped(&self) -> Self {
         self.swap_bytes()
     }
@@ -768,7 +763,6 @@ impl FixedWidthInteger for u16 {
         self.leading_zeros() as usize
     }
 
-    #[must_use]
     fn little_endian(&self) -> Self {
         self.to_le()
     }
@@ -815,12 +809,10 @@ impl FixedWidthInteger for u16 {
 }
 
 impl FixedWidthInteger for u32 {
-    #[must_use]
     fn big_endian(&self) -> Self {
         self.to_be()
     }
 
-    #[must_use]
     fn byte_swapped(&self) -> Self {
         self.swap_bytes()
     }
@@ -829,7 +821,6 @@ impl FixedWidthInteger for u32 {
         self.leading_zeros() as usize
     }
 
-    #[must_use]
     fn little_endian(&self) -> Self {
         self.to_le()
     }
@@ -876,12 +867,10 @@ impl FixedWidthInteger for u32 {
 }
 
 impl FixedWidthInteger for u64 {
-    #[must_use]
     fn big_endian(&self) -> Self {
         self.to_be()
     }
 
-    #[must_use]
     fn byte_swapped(&self) -> Self {
         self.swap_bytes()
     }
@@ -890,7 +879,6 @@ impl FixedWidthInteger for u64 {
         self.leading_zeros() as usize
     }
 
-    #[must_use]
     fn little_endian(&self) -> Self {
         self.to_le()
     }
@@ -937,12 +925,10 @@ impl FixedWidthInteger for u64 {
 }
 
 impl FixedWidthInteger for u128 {
-    #[must_use]
     fn big_endian(&self) -> Self {
         self.to_be()
     }
 
-    #[must_use]
     fn byte_swapped(&self) -> Self {
         self.swap_bytes()
     }
@@ -951,7 +937,6 @@ impl FixedWidthInteger for u128 {
         self.leading_zeros() as usize
     }
 
-    #[must_use]
     fn little_endian(&self) -> Self {
         self.to_le()
     }
@@ -998,12 +983,10 @@ impl FixedWidthInteger for u128 {
 }
 
 impl FixedWidthInteger for i8 {
-    #[must_use]
     fn big_endian(&self) -> Self {
         self.to_be()
     }
 
-    #[must_use]
     fn byte_swapped(&self) -> Self {
         self.swap_bytes()
     }
@@ -1012,7 +995,6 @@ impl FixedWidthInteger for i8 {
         self.unsigned_abs().leading_zeros() as usize
     }
 
-    #[must_use]
     fn little_endian(&self) -> Self {
         self.to_le()
     }
@@ -1059,12 +1041,10 @@ impl FixedWidthInteger for i8 {
 }
 
 impl FixedWidthInteger for i16 {
-    #[must_use]
     fn big_endian(&self) -> Self {
         self.to_be()
     }
 
-    #[must_use]
     fn byte_swapped(&self) -> Self {
         self.swap_bytes()
     }
@@ -1073,7 +1053,6 @@ impl FixedWidthInteger for i16 {
         self.unsigned_abs().leading_zeros() as usize
     }
 
-    #[must_use]
     fn little_endian(&self) -> Self {
         self.to_le()
     }
@@ -1120,12 +1099,10 @@ impl FixedWidthInteger for i16 {
 }
 
 impl FixedWidthInteger for i32 {
-    #[must_use]
     fn big_endian(&self) -> Self {
         self.to_be()
     }
 
-    #[must_use]
     fn byte_swapped(&self) -> Self {
         self.swap_bytes()
     }
@@ -1134,7 +1111,6 @@ impl FixedWidthInteger for i32 {
         self.unsigned_abs().leading_zeros() as usize
     }
 
-    #[must_use]
     fn little_endian(&self) -> Self {
         self.to_le()
     }
@@ -1181,12 +1157,10 @@ impl FixedWidthInteger for i32 {
 }
 
 impl FixedWidthInteger for i64 {
-    #[must_use]
     fn big_endian(&self) -> Self {
         self.to_be()
     }
 
-    #[must_use]
     fn byte_swapped(&self) -> Self {
         self.swap_bytes()
     }
@@ -1195,7 +1169,6 @@ impl FixedWidthInteger for i64 {
         self.unsigned_abs().leading_zeros() as usize
     }
 
-    #[must_use]
     fn little_endian(&self) -> Self {
         self.to_le()
     }
@@ -1242,12 +1215,10 @@ impl FixedWidthInteger for i64 {
 }
 
 impl FixedWidthInteger for i128 {
-    #[must_use]
     fn big_endian(&self) -> Self {
         self.to_be()
     }
 
-    #[must_use]
     fn byte_swapped(&self) -> Self {
         self.swap_bytes()
     }
@@ -1256,7 +1227,6 @@ impl FixedWidthInteger for i128 {
         self.unsigned_abs().leading_zeros() as usize
     }
 
-    #[must_use]
     fn little_endian(&self) -> Self {
         self.to_le()
     }

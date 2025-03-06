@@ -2,7 +2,6 @@ use alloc::string::{String, ToString};
 
 use crate::num::Number;
 
-#[repr(usize)]
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Default)]
 pub enum NumberFormatterStyle {
     #[default]

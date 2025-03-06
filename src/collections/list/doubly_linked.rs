@@ -438,7 +438,7 @@ impl<T> List<T> {
     /// list.set_capacity(20);
     /// assert_eq!(list.capacity(), 20);
     /// ```
-    pub fn set_capacity(&mut self, capacity: usize) {
+    pub const fn set_capacity(&mut self, capacity: usize) {
         self.capacity = capacity;
     }
 
