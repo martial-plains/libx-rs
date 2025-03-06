@@ -11,5 +11,4 @@ extern crate alloc;
 extern crate core;
 
 pub mod collections;
-pub mod formatting;
 pub mod num;
