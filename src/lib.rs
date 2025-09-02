@@ -1,5 +1,5 @@
 #![no_std]
-#![feature(cfg_match, const_trait_impl, decl_macro, portable_simd)]
+#![feature(const_trait_impl, decl_macro, portable_simd)]
 #![warn(
     clippy::pedantic,
     clippy::nursery,
